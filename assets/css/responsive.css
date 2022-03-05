@@ -1,0 +1,75 @@
+/*-----Index_Page_Media_Query_Start-----*/
+
+@media only screen and (max-width: 1024px) {
+  
+.container-fluid {
+    width: 100% !important;
+    margin: auto !important;
+}
+
+.header_up_right {
+    float: right;
+    width: 100%;
+    padding-left: 120px !important;
+}
+
+.header_up_ul {
+    padding-top: 2px !important;
+ }
+
+.logo {
+    padding-top: 13px !important;
+}
+
+.name {
+    padding-left: 54px !important;
+    font-family: 'Hind Vadodara', sans-serif;
+}
+
+.contet_a {
+    width: 100%;
+    margin: auto;
+    border: 1px solid #353f9d;
+    padding: 10px 10px;
+    font-size: 12px !important;
+    /* background: #f6f6f8; */
+    background: #353f9d;
+    display: table;
+    /* background-image: url('../img/bg-3.jpg'); */
+    background-size: contain;
+    color: #ffffff;
+    /* border-radius: 25px; */
+    text-align: center;
+    font-family: 'Hind Vadodara', sans-serif;
+}
+
+}
+
+@media only screen and (max-width: 768px) {
+  
+.container-fluid {
+    width: 100% !important;
+    margin: auto !important;
+}
+
+.mahila_conte {
+    float: left;
+    width: 100%;
+    margin-top: 35px !important;
+    padding-left: 9px;
+}
+
+.header_up_right {
+    float: right;
+    width: 100%;
+    margin-top: 8px !important;
+    padding-left: 55px !important;
+}
+
+.navbar-toggler {
+    outline: none !important;
+}
+
+}
+
+/*-----Index_Page_Media_Query_End-----*/
