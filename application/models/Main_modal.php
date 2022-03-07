@@ -8,47 +8,72 @@ class Main_modal extends MY_Model
 	{
 		parent::__construct();
 		$this->banners = $this->config->item('banners');
-		$this->heads = $this->config->item('heads');
-		$this->gallery = $this->config->item('gallery');
+		$this->products = $this->config->item('products');
 	}
+
+    private $cart = 'cart';
 
 	public function getBanners()
     {
-        return $this->getAll('banners', "CONCAT('".$this->banners."', banner) banner", []);
+        return $this->getAll('banners', "title, sub_title, CONCAT('".base_url($this->banners)."', banner) banner", []);
     }
 
-	public function getHeads()
+	public function getCart($u_id)
     {
-        return $this->getAll('heads', "name, hoddo, CONCAT('".$this->heads."', img) img", []);
+        if ($u_id) {
+            return [];
+        }else{
+            if ($this->input->get('cart')) {
+                $ids = array_map(function($id){
+                    $this->db->select('p.id, p.p_title, p.p_price, CONCAT("'.$this->products.'", p.image) image, CONCAT(c.cat_slug, "/", sc.cat_slug, "/", p.p_slug) slug, p_show, LEFT(p.description, 230) description')
+                                        ->from('products p')
+                                        ->where(['p.p_show' => $p_show])
+                                        ->join('category c', 'c.id = p.cat_id')
+                                        ->join('category sc', 'sc.id = p.sub_cat_id')
+                                        ->order_by('p.id DESC')
+                                        ->limit(6)
+                                        ->get()->result();
+                    return d_id($id['prod']);
+                }, $this->input->get('cart'));
+                re($ids);
+            }else
+                return [];
+        }
     }
 
-	public function getEvents()
+	public function getProds($show)
     {
-        return $this->getAll('events', "title", ['is_deleted' => 0], 'id DESC', 10);
+        foreach ($show as $p_show) {
+            $return[$p_show] = $this->db->select('p.id, p.p_title, p.p_price, CONCAT("'.$this->products.'", p.image) image, CONCAT(c.cat_slug, "/", sc.cat_slug, "/", p.p_slug) slug, p_show, LEFT(p.description, 230) description')
+                                        ->from('products p')
+                                        ->where(['p.p_show' => $p_show])
+                                        ->join('category c', 'c.id = p.cat_id')
+                                        ->join('category sc', 'sc.id = p.sub_cat_id')
+                                        ->order_by('p.id DESC')
+                                        ->limit(6)
+                                        ->get()->result();
+        }
+        
+        return $return;
     }
 
-	public function getNews()
+    public function addCart($u_id)
     {
-        return $this->getAll('news', "id, title", ['is_deleted' => 0], 'id DESC', 10);
-    }
+        $add = [
+            'prod_id'  => d_id($this->input->post('product'))
+        ];
 
-	public function getImageGallery()
-    {
-        return $this->getAll('image_gallery', "CONCAT('".$this->gallery."', image) image", ['is_deleted' => 0], 'id DESC', 8);
-    }
+        if ($u_id) {
+            
+        }else{
+            $add['session_id'] = $this->session->session_id;
+            $check = $this->get($this->cart, 'prod_id, session_id', $add);
+            $add['quantity'] = $this->input->post('quantity');
 
-	public function getVideoGallery()
-    {
-        return $this->getAll('video_gallery', "name, v_url", ['is_deleted' => 0], 'id DESC', 8);
-    }
-
-	public function getVisitors()
-    {
-		if (!$this->main->get('app_configs', 'value', ['cong_name' => 'visitors']))
-			$this->main->add(['cong_name' => 'visitors', 'value' => 0], 'app_configs');
-			
-		$visitors = $this->main->check('app_configs', ['cong_name' => 'visitors'], 'value');
-		$this->main->update(['cong_name' => 'visitors'], ['value' => ($visitors + 1)], 'app_configs');
-		return $visitors;
+            if ($check)
+                return $this->update($check, $add, $this->cart);
+            else
+                return $this->add($add, $this->cart);
+        }
     }
 }

@@ -7,7 +7,7 @@ class Banner_model extends MY_Model
 {
 	public $table = "banners b";
 	public $select_column = ['b.id', 'b.title', 'b.sub_title', 'b.banner'];
-	public $search_column = ['b.id', 'b.title', 'b.sub_title', 'b.banner'];
+	public $search_column = ['b.title', 'b.sub_title'];
     public $order_column = [null, 'b.title', 'b.sub_title', 'b.banner', null];
 	public $order = ['b.id' => 'DESC'];
 

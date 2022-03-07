@@ -4,6 +4,8 @@ $admin = 'adminPanel';
 $route['default_controller'] = 'home';
 $route['404_override'] = 'home/error_404';
 $route['translate_uri_dashes'] = TRUE;
+$route['getCart'] = 'home/getCart';
+$route['addCart']['post'] = 'home/addCart';
 
 // admin routes
 $route["$admin/forgot-password"] = "$admin/login/forgot_password";

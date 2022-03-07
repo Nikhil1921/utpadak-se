@@ -4,10 +4,10 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 switch ($_SERVER['SERVER_NAME']) {
-    case 'www.ecommerce.com':
-    case 'ecommerce.com':
-    case 'https://www.ecommerce.com':
-    case 'https://ecommerce.com':
+    case 'www.utpadak_se.com':
+    case 'utpadak_se.com':
+    case 'https://www.utpadak_se.com':
+    case 'https://utpadak_se.com':
         $db['default'] = array(
             'dsn'   => '',
             'hostname' => 'localhost',
@@ -39,7 +39,7 @@ switch ($_SERVER['SERVER_NAME']) {
             'hostname' => 'localhost',
             'username' => 'denseeqq_demo',
             'password' => 'demo@321',
-            'database' => 'denseeqq_ecommerce',
+            'database' => 'denseeqq_utpadak_se',
             'dbdriver' => 'mysqli',
             'dbprefix' => '',
             'pconnect' => (ENVIRONMENT !== 'production'),
@@ -63,7 +63,7 @@ switch ($_SERVER['SERVER_NAME']) {
             'hostname' => 'localhost',
             'username' => 'root',
             'password' => '',
-            'database' => 'ecommerce',
+            'database' => 'utpadak_se',
             'dbdriver' => 'mysqli',
             'dbprefix' => '',
             'pconnect' => (ENVIRONMENT !== 'production'),

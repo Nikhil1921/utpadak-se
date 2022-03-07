@@ -78,7 +78,7 @@ class Banners extends Admin_controller  {
         if ($this->form_validation->run() == FALSE)
             return $this->template->load('template', "$this->redirect/form", $data);
         else{
-            $image = $this->uploadImage('image');
+            $image = $this->uploadImage('image', 'jpg|jpeg', ['max_width' => 1920, 'max_height' => 500, 'min_width' => 1920, 'min_height' => 500]);
             if ($image['error'] == TRUE){
                 $this->session->set_flashdata('error', $image["message"]);
                 return $this->template->load('template', "$this->redirect/form", $data);
@@ -116,7 +116,7 @@ class Banners extends Admin_controller  {
             ];
 
             if (!empty($_FILES['image']['name'])) {
-                $image = $this->uploadImage('image');
+                $image = $this->uploadImage('image', 'jpg|jpeg', ['max_width' => 1920, 'max_height' => 500, 'min_width' => 1920, 'min_height' => 500]);
                 if ($image['error'] == TRUE)
                     flashMsg(0, "", $image["message"], "$this->redirect/update/$id");
                 else{

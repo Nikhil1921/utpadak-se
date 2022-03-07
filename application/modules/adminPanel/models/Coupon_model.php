@@ -7,7 +7,7 @@ class Coupon_model extends MY_Model
 {
 	public $table = "coupon c";
 	public $select_column = ['c.id', 'c.coupon_code', 'CONCAT(c.coupon_discount, "%") coupon_discount'];
-	public $search_column = ['c.id', 'c.coupon_code', 'c.coupon_discount'];
+	public $search_column = ['c.coupon_code', 'c.coupon_discount'];
     public $order_column = [null, 'c.coupon_code', 'c.coupon_discount', null];
 	public $order = ['c.id' => 'DESC'];
 

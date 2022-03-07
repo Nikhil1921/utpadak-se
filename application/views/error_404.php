@@ -1,27 +1,23 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<section class="background">
-  <section class="content">
-    <div class="container">
-      <div class="row content_main">
-        <div class="padd">
-          <div class="col-lg-12 content_right">
-            <div class="row cont_right_main mt-4 p-3">
-              <div class="col-12">
-                    <div class="container text-center">
-                         <img class="img-100" src="<?= base_url('assets/images/sad.png') ?>" alt="">
-                         <div class="error-heading">
-                              <h2 class="headline font-danger">404</h2>
-                         </div>
-                         <div class="col-md-8 offset-md-2">
-                              <p class="sub-content">The page you are attempting to reach is currently not available. This may be because the page does not exist or has been moved.</p>
-                         </div>
-                         <div><a class="btn btn-danger-gradien btn-lg" href="<?= base_url() ?>">BACK TO HOME PAGE</a></div>
+<main>
+    <div class="error-area pt-80 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="error-info text-center">
+                        <div class="error-image text-center mb-50">
+                            <?= img("assets/images/404.png") ?>
+                        </div>
+                        <div class="error-content">
+                            <h5>Page Not Found</h5>
+                            <p>Sorry, the page you've requested is not available. Please try searching for something else or return to Homepage.</p>
+                            <div class="error-button">
+                                <?= anchor('', 'Return to Homepage', 'class="error-btn"') ?>
+                            </div>
+                        </div>
                     </div>
-              </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
-</section>
+</main>

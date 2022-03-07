@@ -1,133 +1,369 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<section class="background">
-  <section class="content">
-    <div class="container">
-      <div class="row content_main">
-        <div class="padd">
-          <div class="col-lg-3 content_left">
-            <?php foreach($heads as $head): ?>
-            <div class="director_img">
-                <?= img(['src' => $head['img'], 'class' => "img_der"]) ?>
-            </div>
-            <div class="btnn">
-                <p class="name"><strong><?= $head['name'] ?></strong></p>
-                <p class="name"><?= $head['hoddo'] ?></p>
-            </div>
-            <?php endforeach ?>
-          </div>
-          <div class="col-lg-9 content_right">
-            <div class="row cont_right_main">
-              <div class="col-12 carousel_content">
-                <div id="carouselBannersControls" class="carousel slide" data-ride="carousel">
-                  <div class="carousel-inner">
-                    <?php foreach($banners as $k => $banner): ?>
-                    <div class="carousel-item <?= $k === 0 ? 'active' : ''?>">
-                        <?= img(['src' => $banner['banner'], 'class' => "d-block w-100"]) ?>
-                    </div>
-                    <?php endforeach ?>
-                  </div>
-                  <a class="carousel-control-prev" href="#carouselBannersControls" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                  <a class="carousel-control-next" href="#carouselBannersControls" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="row cont_main">
-              <div class="col-lg-9 marqe_content">
-                <div class="panel panel-primary">
-                  <div class="texture heading-texture">
-                    <div class="bg_image_mar">
-                        <div style="float:left;padding:5px;font-size: 21px;">
-                            <i class="fa fa-newspaper-o fa-lg"></i>કાર્યક્રમ ની વિગતો
-                        </div>
-                        <?= anchor("events", 'વધુમાં જાણો', 'class="btn Hind_Vadodara_fnt" style="color: black; float: right;background-color:#ffffff;border:1px solid white;font-size: 10px;margin-top: 6px;margin-right: 8px;"'); ?>
-                    </div>
-                    <div class="panel-body">
-                        <marquee behavior="scroll" direction="UP" class="ojas-small" scrolldelay="500" style="height: 256px;background-color: #f6f6f8;">
-                            <div class="mrq_content">
-                                <?php 
-                                    foreach($events as $event):
-                                        echo anchor("events", '<p><span><i class="fa fa-caret-right" aria-hidden="true"></i> '.$event['title'].'</span></p>', 'class="mar_con"');
-                                    endforeach 
-                                ?>
+<main>
+    <div class="slider-area">
+        <div class="swiper-container slider__active">
+            <div class="slider-wrapper swiper-wrapper">
+                <?php foreach($banners as $banner): ?>
+                <div class="single-slider swiper-slide slider-height d-flex align-items-center" data-background="<?= $banner['banner']; ?>">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl-5">
+                                <div class="slider-content">
+                                    <h2 data-animation="fadeInLeft" data-delay="1.7s" class="pt-15 slider-title pb-5"><?= $banner['title']; ?></h2>
+                                    <p class="pr-20 slider_text" data-animation="fadeInLeft" data-delay="1.9s"><?= $banner['sub_title']; ?></p>
+                                </div>
                             </div>
-                        </marquee>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
-              <div class="col-lg-3 sec_detail">
-                <div class="sec_content">
-                  <div class="content-1">
-                    <p><?= anchor('what-is-mahila-samakhya', 'મહિલા સામખ્ય એટલે શું?', 'class="contet_a"'); ?></p>
-                  </div>
-                  <div class="content-1">
-                    <p><?= anchor('work-vistar', 'કાર્યક્રમનો કાર્યવિસ્તાર', 'class="contet_a"'); ?></p>
-                  </div>
-                  <div class="content-1">
-                    <p><?= anchor('kamgiri', 'કાર્યક્રમની કામગીરી', 'class="contet_a"'); ?></p>
-                  </div>
-                  <div class="content-1">
-                    <p><?= anchor('kendro', 'મહિલા સામખ્ય દ્વારા ચાલતા કેન્દ્રો', 'class="contet_a"'); ?></p>
-                  </div>
-                </div>
-              </div>
+                <?php endforeach ?>
+                <div class="main-slider-paginations"></div>
             </div>
-            <div class="row gallery_sec mt-4">
-              <div class="col-lg-7 gallery_sec_main">
-                <ul class="nav nav-pills mb-3 mt-3" id="pills-tab" role="tablist">
-                  <li class="nav-item">
-                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Photo Gallery</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Video Gallery</a>
-                  </li>
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+        </div>
+    </div>
+    <section class="features__area pt-20">
+        <div class="container">
+            <div class="row row-cols-xxl-4 row-cols-xl-4 row-cols-lg-4 row-cols-md-2 row-cols-sm-2 row-cols-1 gx-0">
+                <div class="col">
+                    <div class="features__item d-flex white-bg">
+                        <div class="features__icon mr-20">
+                            <i class="fal fa-truck"></i>
+                        </div>
+                        <div class="features__content">
+                            <h6>FREE DELIVERY</h6>
+                            <p>For all orders over ₹120</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="features__item d-flex white-bg">
+                        <div class="features__icon mr-20">
+                            <i class="fal fa-money-check"></i>
+                        </div>
+                        <div class="features__content">
+                            <h6>SAFE PAYMENT</h6>
+                            <p>100% secure payment</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="features__item d-flex white-bg">
+                        <div class="features__icon mr-20">
+                            <i class="fal fa-comments-alt"></i>
+                        </div>
+                        <div class="features__content">
+                            <h6>24/7 HELP CENTER</h6>
+                            <p>Delicated 24/7 support</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="features__item features__item-last d-flex white-bg">
+                        <div class="features__icon mr-20">
+                            <i class="fad fa-user-headset"></i>
+                        </div>
+                        <div class="features__content">
+                            <h6>FRIENDLY SERVICES</h6>
+                            <p>30 day satisfaction guarantee</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="banner__area pt-20 pb-10">
+        <div class="container">
+            <div class="row">
+                <?php $sub_bans = [
+                    [
+                        'banner' => 'banner-1.jpg',
+                        'title'  => 'Intelligent <br> New Touch Control',
+                        'sub_title'  => 'Discount 20% On Products',
+                    ],
+                    [
+                        'banner' => 'banner-2.jpg',
+                        'title'  => 'On-sale <br> Best Prices',
+                        'sub_title'  => 'Limited Time: Online Only!',
+                    ],
+                    [
+                        'banner' => 'banner-3.jpg',
+                        'title'  => 'Hot Sale <br> Super Laptops 2022',
+                        'sub_title'  => 'Free Shipping All Order',
+                    ],
+                ] ?>
+                <?php foreach($sub_bans as $sb): ?>
+                <div class="col-xl-4 col-lg-4 col-md-6">
+                    <div class="banner__item p-relative w-img mb-30">
+                        <div class="banner__img">
+                            <a href="javascript:;">
+                            <?= img("assets/images/banners/".$sb['banner']); ?>
+                            </a>
+                        </div>
+                        <div class="banner__content">
+                            <h6><a href="javascript:;"><?= $sb['title'] ?></a></h6>
+                            <p><?= $sb['sub_title'] ?></p>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach ?>
+            </div>
+        </div>
+    </section>
+    <section class="topsell__area-1 pt-15">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="section__head d-flex justify-content-between mb-10">
+                        <div class="section__title">
+                            <h5 class="st-titile">Top Deals Of The Day</h5>
+                        </div>
+                        <div class="button-wrap">
+                            <?= anchor('all', 'See All Product <i class="fal fa-chevron-right"></i>', ); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="product-bs-slider">
+                    <div class="product-slider swiper-container">
+                        <div class="swiper-wrapper">
+                        <?php foreach($prods['Deals Of The Day'] as $deal): ?>
+                            <div class="product__item swiper-slide">
+                                <div class="product__thumb fix">
+                                    <div class="product-image w-img">
+                                        <?= anchor($deal->slug, img($deal->image)); ?>
+                                    </div>
+                                    <div class="product-action">
+                                        <a href="javascript:;" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId">
+                                            <i class="fal fa-eye"></i>
+                                            <i class="fal fa-eye"></i>
+                                        </a>
+                                        <a href="javascript:;" onclick="wishlist.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
+                                            <i class="fal fa-heart"></i>
+                                            <i class="fal fa-heart"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product__content">
+                                    <h6><?= $deal->p_title; ?></h6>
+                                    <div class="rating mb-5">
+                                    </div>
+                                    <div class="price mb-10">
+                                        <span>₹<?= $deal->p_price; ?></span>
+                                    </div>
+                                    <!-- <div class="progress-rate">
+                                        <span>Qty : 0</span>
+                                    </div> -->
+                                </div>
+                                <div class="product__add-cart text-center">
+                                    <button type="button" onclick="cart.add(<?= e_id($deal->id) ?>)" name="cart" class="cart-btn product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                        </div>
+                    </div>
+                    <!-- If we need navigation buttons -->
+                    <div class="bs-button bs-button-prev"><i class="fal fa-chevron-left"></i></div>
+                    <div class="bs-button bs-button-next"><i class="fal fa-chevron-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php $sub_bans = [
+        [
+            'banner' => 'banner-4.jpg',
+            'span'  => 'Bestseller Products',
+            'title'  => 'PC & Docking Station',
+            'sub_title'  => 'Discount 20% Off, Top Quality Products',
+        ],
+        [
+            'banner' => 'banner-5.jpg',
+            'span'  => 'Featured Products',
+            'title'  => 'Accessories iPhone',
+            'sub_title'  => 'Free Shipping All Order Over ₹ 99',
+        ]
+        ];  ?>
+    <section class="banner__area banner__area-d pb-10">
+        <div class="container">
+            <div class="row">
+                <?php foreach($sub_bans as $sb): ?>
+                <div class="col-xl-6 col-lg-6 col-md-12">
+                    <div class="banner__item p-relative w-img mb-30">
+                        <div class="banner__img">
+                            <a href="javascript:;"><?= img("assets/images/banners/".$sb['banner']) ?></a>
+                        </div>
+                        <div class="banner__content">
+                            <span><?= $sb['span'] ?></span>
+                            <h6><a href="javascript:;"><?= $sb['title'] ?></a></h6>
+                            <p><?= $sb['sub_title'] ?></p>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach ?>
+            </div>
+        </div>
+    </section>
+    <section class="topsell__area-2 pt-15">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="section__head d-flex justify-content-between mb-10">
+                        <div class="section__title">
+                            <h5 class="st-titile">Top Selling Products</h5>
+                        </div>
+                        <div class="button-wrap">
+                            <?= anchor('all', 'See All Product <i class="fal fa-chevron-right"></i>', ); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="product-bs-slider">
+                    <div class="product-slider swiper-container">
+                        <div class="swiper-wrapper">
+                        <?php foreach($prods['Top Selling'] as $deal): ?>
+                            <div class="product__item swiper-slide">
+                                <div class="product__thumb fix">
+                                    <div class="product-image w-img">
+                                        <?= anchor($deal->slug, img($deal->image)); ?>
+                                    </div>
+                                    <div class="product-action">
+                                        <a href="javascript:;" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId">
+                                            <i class="fal fa-eye"></i>
+                                            <i class="fal fa-eye"></i>
+                                        </a>
+                                        <a href="javascript:;" onclick="wishlist.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
+                                            <i class="fal fa-heart"></i>
+                                            <i class="fal fa-heart"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product__content">
+                                    <h6><?= $deal->p_title; ?></h6>
+                                    <div class="rating mb-5">
+                                    </div>
+                                    <div class="price mb-10">
+                                        <span>₹<?= $deal->p_price; ?></span>
+                                    </div>
+                                </div>
+                                <div class="product__add-cart text-center">
+                                    <button type="button" onclick="cart.add(<?= e_id($deal->id) ?>)" name="cart" class="cart-btn product-modal-sidebar-open-btn d-flex align-items-center justify-content-center w-100">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                        </div>
+                    </div>
+                    <div class="bs-button bs-button-prev"><i class="fal fa-chevron-left"></i></div>
+                    <div class="bs-button bs-button-next"><i class="fal fa-chevron-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="featured light-bg pt-55 pb-40">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="section__head d-flex justify-content-between mb-30">
+                        <div class="section__title">
+                            <h5 class="st-titile">Top Featured Products</h5>
+                        </div>
+                        <div class="button-wrap">
+                            <?= anchor('all', 'See All Product <i class="fal fa-chevron-right"></i>', ); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <?php foreach($prods['Top Featured'] as $k => $deal): if ($k != 0) break; ?>
+                <div class="col-xl-6 col-lg-12">
+                    <div class="single-features-item single-features-item-d b-radius mb-20">
+                        <div class="row  g-0 align-items-center">
+                            <div class="col-md-6">
+                                <div class="features-thum">
+                                    <div class="features-product-image w-img">
+                                        <?= anchor($deal->slug, img($deal->image)); ?>
+                                    </div>
+                                    <div class="product-action">
+                                        <a href="javascript:;" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId">
+                                            <i class="fal fa-eye"></i>
+                                            <i class="fal fa-eye"></i>
+                                        </a>
+                                        <a href="javascript:;" onclick="wishlist.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
+                                            <i class="fal fa-heart"></i>
+                                            <i class="fal fa-heart"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="product__content product__content-d">
+                                    <h6><?= anchor($deal->slug, $deal->p_title); ?></h6>
+                                    <div class="rating mb-5"></div>
+                                    <div class="price d-price mb-10">
+                                        <span>₹ <?= $deal->p_price ?> </span>
+                                    </div>
+                                    <div class="features-des mb-25">
+                                        <?= anchor($deal->slug, $deal->description); ?>
+                                    </div>
+                                    <div class="cart-option">
+                                        <a href="javascript:;" onclick="cart.add(<?= e_id($deal->id) ?>)" class="cart-btn-2 w-100 mr-10">Add to Cart</a>
+                                        <a href="javascript:;" onclick="wishlist.add(<?= e_id($deal->id) ?>)" class="transperant-btn"><i class="fal fa-heart"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach ?>
+                <div class="col-xl-6 col-lg-12">
                     <div class="row">
-                        <?php foreach($image_gallery as $k => $ig): ?>
-                        <div class="col-lg-3 <?= $k > 3 ? 'mt-3' : '' ?>">
-                            <?= anchor('gallery', img(['src' => $ig['image'], 'class' => "same_width"])); ?>
+                        <?php foreach($prods['Top Featured'] as $k => $deal): if ($k == 0) continue; if ($k > 4) break; ?>
+                        <div class="col-md-6">
+                            <div class="single-features-item b-radius mb-20">
+                                <div class="row  g-0 align-items-center">
+                                    <div class="col-6">
+                                        <div class="features-thum">
+                                            <div class="features-product-image w-img">
+                                                <?= anchor($deal->slug, img($deal->image)); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="product__content product__content-d">
+                                            <h6><?= anchor($deal->slug, $deal->p_title); ?></h6>
+                                            <div class="rating mb-5"></div>
+                                            <div class="price d-price">
+                                                <span>₹ <?= $deal->p_price ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="features-des mb-25">
+                                            <?= anchor($deal->slug, substr($deal->description, 0, 30)); ?>...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <?php endforeach ?>
                     </div>
-                  </div>
-                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                      No Video
-                    </div>
                 </div>
-              </div>
-              <div class="col-lg-5">
-                <div class="panel panel-primary">
-                  <div class="texture heading-texture">
-                    <div class="bg_image_mar">
-                        <div style="float:left;padding:5px;font-size: 21px;">
-                            <i class="fa fa-newspaper-o fa-lg"></i>સમાચાર
-                        </div>
-                        <?= anchor('news', 'વધુમાં જાણો', 'class="btn Hind_Vadodara_fnt" style="color: black; float: right;background-color:#ffffff;border:1px solid white;font-size: 10px;margin-top: 6px;margin-right: 8px;"'); ?>
-                    </div>
-                    <div class="panel-body">
-                      <marquee behavior="scroll" direction="UP" class="ojas-small" scrolldelay="500" style="height: 216px;background-color: #f6f6f8;">
-                        <div class="mrq_content">
-                            <?php foreach($news as $n): ?>
-                                <?= anchor('news/'.e_id($n['id']), '<p class="marque_p"><span><i class="fa fa-caret-right" aria-hidden="true"></i> '.$n['title'].'</span></p>', 'class="mar_con"'); ?>
-                            <?php endforeach ?>
-                        </div>
-                      </marquee>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </section>
-</section>
+    </section>
+    <!-- <section class="moveing-text-area">
+        <div class="container">
+            <div class="ovic-running">
+                <div class="wrap">
+                    <div class="inner">
+                        <p class="item">Free Delivery - Return Over ₹ 100.00 ( Excluding Homeware) | Free Collect From Store</p>
+                        <p class="item">Design Week / 15% Off the website / Code: AYOSALE-2020</p>
+                        <p class="item">Always iconic. Now organic. Introducing the ₹ 20 Organic Tee.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+</main>
