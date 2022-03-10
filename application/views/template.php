@@ -20,6 +20,7 @@
       <?= link_tag('assets/css/font-awesome-pro.css', 'stylesheet', 'text/css') ?>
       <?= link_tag('assets/css/default.css', 'stylesheet', 'text/css') ?>
       <?= link_tag('assets/css/style.css', 'stylesheet', 'text/css') ?>
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
    </head>
    <body>
       <div id="loading">
@@ -162,13 +163,11 @@
                                  ); ?>
                            </div>
                            <div class="block-wishlist action">
-                              <a class="icon-link" href="wishlist.php">
-                              <i class="flaticon-heart"></i>
-                              <span class="count">0</span>
-                              <span class="text">
-                              <span class="sub">Favorite</span>
-                              My Wishlist </span>
-                              </a>
+                              <?= anchor('wishlist', 
+                                 '<i class="flaticon-heart"></i><span class="count" id="wishlist-count">'.
+                                 count($this->wishlist).
+                                 '</span><span class="text"><span class="sub">Favorite</span><span>My Wishlist</span> </span>'
+                                 ,'class="icon-link"'); ?>
                            </div>
                            <div class="block-cart action">
                               <?= anchor('cart', 
@@ -176,50 +175,7 @@
                                  count($this->cart).
                                  '</span><span class="text"><span class="sub">Your Cart</span><span class="cart-total">₹ 0.00</span> </span>'
                                  ,'class="icon-link"'); ?>
-                              <div class="cart" id="show-cart">
-                                 <!-- <div class="cart__mini">
-                                    <ul>
-                                    	<li>
-                                    		<div class="cart__title"></div>
-                                    	</li>
-                                    	<li>
-                                    		<div class="cart__item d-flex justify-content-center align-items-center">
-                                    			<h6>Your cart is empty</h6>
-                                    		</div>
-                                    	</li> -->
-                                 <!-- <li>
-                                    <div class="cart__item d-flex justify-content-between align-items-center">
-                                    	<div class="cart__inner d-flex">
-                                    	<div class="cart__thumb">
-                                    		<a href="product-details.php">
-                                    		<img src="admin/image/product/" alt=""> Image
-                                    		</a>
-                                    	</div>
-                                    	<div class="cart__details">
-                                    		<h6><a href="product-details.php">PRD</a></h6>
-                                    		<div class="cart__price">
-                                    		<span>₹ 0.00</span>
-                                    		</div>
-                                    	</div>
-                                    	</div>
-                                    	<div class="cart__del">
-                                    		<a href="cart_delete.php?id=00"><i class="fal fa-times"></i></a>
-                                    	</div>
-                                    </div>
-                                    </li>
-                                    <li>
-                                    <div class="cart__sub d-flex justify-content-between align-items-center">
-                                    	<h6>Subtotal</h6>
-                                    	<span class="cart__sub-total">₹ 0.000</span>
-                                    </div>
-                                    </li>
-                                    <li>
-                                    <a href="cart.php" class="wc-cart mb-10">View cart</a>
-                                    <a href="checkout.php" class="wc-checkout">Checkout</a>
-                                    </li> -->
-                                 <!-- </ul>
-                                    </div> -->
-                              </div>
+                              <div class="cart" id="show-cart"></div>
                            </div>
                         </div>
                      </div>
@@ -313,7 +269,36 @@
          </div>
       </div>
       <div class="body-overlay"></div>
-      <?= $contents ?>
+      <main>
+         <?php if(isset($breadcrumb)): ?>
+         <div class="page-banner-area page-banner-height-2" data-background="<?= base_url($breadcrumb) ?>">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="page-banner-content text-center">
+                            <h4 class="breadcrumb-title"><?= $title ?></h4>
+                            <div class="breadcrumb-two">
+                                <nav>
+                                   <nav class="breadcrumb-trail breadcrumbs">
+                                      <ul class="breadcrumb-menu">
+                                         <li class="breadcrumb-trail">
+                                            <?= anchor('', '<span>Home</span>'); ?>
+                                         </li>
+                                         <li class="trail-item">
+                                            <span><?= $title ?></span>
+                                         </li>
+                                      </ul>
+                                   </nav> 
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+         <?php endif ?>
+         <?= $contents ?>
+      </main>
       <footer>
          <div class="fotter-area d-dark-bg">
             <div class="footer__top pt-80 pb-15">
@@ -437,6 +422,20 @@
             </div>
          </div>
       </footer>
+      <div class="modal fade" id="productModalId" tabindex="-1" role="dialog" aria-hidden="true">
+         <div class="modal-dialog modal-dialog-centered product__modal" role="document">
+            <div class="modal-content">
+               <div class="product__modal-wrapper p-relative">
+                  <div class="product__modal-close p-absolute">
+                     <button data-bs-dismiss="modal"><i class="fal fa-times"></i></button>
+                  </div>
+                  <div class="product__modal-inner" id="prod-details">
+                     
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
       <?= form_hidden('base_url', base_url()) ?>
       <?= script('assets/js/vendor/jquery.js') ?>
       <?= script('assets/js/vendor/waypoints.js') ?>
@@ -454,7 +453,16 @@
       <?= script('assets/js/wow.js') ?>
       <?= script('assets/js/isotope-pkgd.js') ?>
       <?= script('assets/js/imagesloaded-pkgd.js') ?>
+      <?php if($this->session->error || $this->session->success): ?>
       <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <?= form_hidden('error', $this->session->error) ?>
+      <?= form_hidden('success', $this->session->success) ?>
+      <?php endif ?>
+      <?php if(in_array($name, ['login', 'register'])): ?>
+         <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+         <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
+      <?php endif ?>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
       <?= script('assets/js/main.js?v=<?= time() ?>') ?>
    </body>
 </html>

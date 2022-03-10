@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<main>
+
     <div class="slider-area">
         <div class="swiper-container slider__active">
             <div class="slider-wrapper swiper-wrapper">
@@ -128,6 +128,12 @@
                     <div class="product-slider swiper-container">
                         <div class="swiper-wrapper">
                         <?php foreach($prods['Deals Of The Day'] as $deal): ?>
+                            <?= form_hidden('cart-'.e_id($deal->id), json_encode([
+                                'prod' => e_id($deal->id),
+                                'p_title' => $deal->p_title,
+                                'image' => $deal->image,
+                                'p_price' => $deal->p_price,
+                                'slug' => $deal->slug])) ?>
                             <div class="product__item swiper-slide">
                                 <div class="product__thumb fix">
                                     <div class="product-image w-img">
@@ -138,7 +144,7 @@
                                             <i class="fal fa-eye"></i>
                                             <i class="fal fa-eye"></i>
                                         </a>
-                                        <a href="javascript:;" onclick="wishlist.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
+                                        <a href="javascript:;" onclick="wish.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
                                             <i class="fal fa-heart"></i>
                                             <i class="fal fa-heart"></i>
                                         </a>
@@ -224,6 +230,18 @@
                     <div class="product-slider swiper-container">
                         <div class="swiper-wrapper">
                         <?php foreach($prods['Top Selling'] as $deal): ?>
+                            <?= form_hidden('cart-'.e_id($deal->id), json_encode([
+                                'prod' => e_id($deal->id),
+                                'p_title' => $deal->p_title,
+                                'image' => $deal->image,
+                                'p_price' => $deal->p_price,
+                                'slug' => $deal->slug])) ?>
+                            <?= form_hidden('cart-'.e_id($deal->id), json_encode([
+                                'prod' => e_id($deal->id),
+                                'p_title' => $deal->p_title,
+                                'image' => $deal->image,
+                                'p_price' => $deal->p_price,
+                                'slug' => $deal->slug])) ?>
                             <div class="product__item swiper-slide">
                                 <div class="product__thumb fix">
                                     <div class="product-image w-img">
@@ -234,7 +252,7 @@
                                             <i class="fal fa-eye"></i>
                                             <i class="fal fa-eye"></i>
                                         </a>
-                                        <a href="javascript:;" onclick="wishlist.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
+                                        <a href="javascript:;" onclick="wish.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
                                             <i class="fal fa-heart"></i>
                                             <i class="fal fa-heart"></i>
                                         </a>
@@ -279,6 +297,12 @@
             </div>
             <div class="row">
                 <?php foreach($prods['Top Featured'] as $k => $deal): if ($k != 0) break; ?>
+                <?= form_hidden('cart-'.e_id($deal->id), json_encode([
+                                'prod' => e_id($deal->id),
+                                'p_title' => $deal->p_title,
+                                'image' => $deal->image,
+                                'p_price' => $deal->p_price,
+                                'slug' => $deal->slug])) ?>
                 <div class="col-xl-6 col-lg-12">
                     <div class="single-features-item single-features-item-d b-radius mb-20">
                         <div class="row  g-0 align-items-center">
@@ -292,7 +316,7 @@
                                             <i class="fal fa-eye"></i>
                                             <i class="fal fa-eye"></i>
                                         </a>
-                                        <a href="javascript:;" onclick="wishlist.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
+                                        <a href="javascript:;" onclick="wish.add(<?= e_id($deal->id) ?>)" class="icon-box icon-box-1">
                                             <i class="fal fa-heart"></i>
                                             <i class="fal fa-heart"></i>
                                         </a>
@@ -311,7 +335,7 @@
                                     </div>
                                     <div class="cart-option">
                                         <a href="javascript:;" onclick="cart.add(<?= e_id($deal->id) ?>)" class="cart-btn-2 w-100 mr-10">Add to Cart</a>
-                                        <a href="javascript:;" onclick="wishlist.add(<?= e_id($deal->id) ?>)" class="transperant-btn"><i class="fal fa-heart"></i></a>
+                                        <a href="javascript:;" onclick="wish.add(<?= e_id($deal->id) ?>)" class="transperant-btn"><i class="fal fa-heart"></i></a>
                                     </div>
                                 </div>
                             </div>

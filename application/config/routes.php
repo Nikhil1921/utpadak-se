@@ -4,6 +4,12 @@ $admin = 'adminPanel';
 $route['default_controller'] = 'home';
 $route['404_override'] = 'home/error_404';
 $route['translate_uri_dashes'] = TRUE;
+
+// front routes
+$route['wishlist'] = 'home/wishlist';
+$route['cart'] = 'home/cart';
+$route['checkout'] = 'user/checkout';
+
 $route['getCart'] = 'home/getCart';
 $route['addCart']['post'] = 'home/addCart';
 

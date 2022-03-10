@@ -9,6 +9,7 @@ application/logs/*
 !application/*/.htaccess
 
 composer.lock
+oldcart
 
 /vendor/
 /theme/

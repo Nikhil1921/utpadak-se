@@ -23,21 +23,28 @@ class Main_modal extends MY_Model
         if ($u_id) {
             return [];
         }else{
-            if ($this->input->get('cart')) {
-                $ids = array_map(function($id){
-                    $this->db->select('p.id, p.p_title, p.p_price, CONCAT("'.$this->products.'", p.image) image, CONCAT(c.cat_slug, "/", sc.cat_slug, "/", p.p_slug) slug, p_show, LEFT(p.description, 230) description')
+            /* if ($this->input->get('cart')) {
+                return array_map(function($id){
+                    $prod = $this->db->select('p.p_title, p.p_price, CONCAT("'.$this->products.'", p.image) image, CONCAT(c.cat_slug, "/", sc.cat_slug, "/", p.p_slug) slug')
                                         ->from('products p')
-                                        ->where(['p.p_show' => $p_show])
+                                        ->where(['p.id' => d_id($id['prod'])])
+                                        ->where(['c.is_deleted' => 0, 'sc.is_deleted' => 0, 'p.is_deleted' => 0])
                                         ->join('category c', 'c.id = p.cat_id')
                                         ->join('category sc', 'sc.id = p.sub_cat_id')
-                                        ->order_by('p.id DESC')
-                                        ->limit(6)
-                                        ->get()->result();
-                    return d_id($id['prod']);
+                                        ->get()->row_array();
+                    if ($prod){ $prod['qty'] = $id['quantity']; $prod['id'] = $id['prod']; return $prod;}
                 }, $this->input->get('cart'));
-                re($ids);
-            }else
+            }else */
                 return [];
+        }
+    }
+
+	public function getWishlist($u_id)
+    {
+        if ($u_id) {
+            return [];
+        }else{
+            return [];
         }
     }
 
@@ -47,6 +54,7 @@ class Main_modal extends MY_Model
             $return[$p_show] = $this->db->select('p.id, p.p_title, p.p_price, CONCAT("'.$this->products.'", p.image) image, CONCAT(c.cat_slug, "/", sc.cat_slug, "/", p.p_slug) slug, p_show, LEFT(p.description, 230) description')
                                         ->from('products p')
                                         ->where(['p.p_show' => $p_show])
+                                        ->where(['c.is_deleted' => 0, 'sc.is_deleted' => 0, 'p.is_deleted' => 0])
                                         ->join('category c', 'c.id = p.cat_id')
                                         ->join('category sc', 'sc.id = p.sub_cat_id')
                                         ->order_by('p.id DESC')

@@ -278,7 +278,7 @@
 
 	////////////////////////////////////////////////////
 	// 21. Cart Plus Minus Js
-	$(".cart-plus-minus").append('<div class="dec qtybutton">-</div><div class="inc qtybutton">+</div>');
+	/* $(".cart-plus-minus").append('<div class="dec qtybutton">-</div><div class="inc qtybutton">+</div>');
 	$(".qtybutton").on("click", function () {
 		var $button = $(this);
 		var oldValue = $button.parent().find("input").val();
@@ -286,14 +286,14 @@
 			var newVal = parseFloat(oldValue) + 1;
 		} else {
 			// Don't allow decrementing below zero
-			if (oldValue > 0) {
+			if (oldValue > 1) {
 				var newVal = parseFloat(oldValue) - 1;
 			} else {
-				newVal = 0;
+				newVal = 1;
 			}
 		}
 		$button.parent().find("input").val(newVal);
-	});
+	}); */
 
 	////////////////////////////////////////////////////
 	// 17. Show Login Toggle Js
@@ -621,83 +621,303 @@
 	
 })(jQuery);
 // my custom code start
+"use strict";
 const base_url = $("input[name=base_url]").val();
 const isLoggedIn = $("input[name=isLoggedIn]").val();
 
-const swalShow = (icon, title) => {
+const swalShow = (icon, title, redirect=null) => {
   Swal.fire({
     title: title,
     icon: icon,
     timer: 2000,
     timerProgressBar: true,
     showConfirmButton: false,
+  }).then((result) => {
+    if (result.dismiss === Swal.DismissReason.timer && redirect) {
+      window.location.href = `${base_url + redirect}.html`;
+    }
   });
+};
+
+if ($('input[name=error]').val())
+	swalShow("error", $("input[name=error]").val());
+
+if ($('input[name=success]').val())
+	swalShow("success", $("input[name=success]").val());
+
+toastr.options = {
+  closeButton: false,
+  debug: false,
+  newestOnTop: false,
+  progressBar: false,
+  positionClass: "toast-top-right",
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: "300",
+  hideDuration: "1000",
+  timeOut: "5000",
+  extendedTimeOut: "1000",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut",
+};
+
+const wish = {
+	add: (id) => {
+		let myWish = JSON.parse(localStorage.getItem("wish"));
+		let add = JSON.parse($(`input[name=cart-${id}]`).val());
+		if (!myWish) {
+		localStorage.setItem("wish", JSON.stringify([add]));
+		} else {
+			let check = true;
+			myWish.forEach((element) => {
+				if (element.prod == id) check = false;
+			});
+			if (check === true) {
+				myWish.push(add);
+				localStorage.setItem("wish", JSON.stringify(myWish));
+			}
+		}
+		toastr["success"]("Product added to wishlist.");
+		wish.count();
+	},
+	count: () => {
+		let myWish = JSON.parse(localStorage.getItem("wish"));
+		let count = !myWish ? 0 : myWish.length;
+		$("#wishlist-count").html(count);
+		wish.show();
+	},
+	delete: (id) => {
+		let myWish = JSON.parse(localStorage.getItem("wish")).filter(function(ele){
+			if (ele.prod !== id) return ele;
+		});
+		localStorage.setItem("wish", JSON.stringify(myWish));
+		toastr["success"]("Product removed from wishlist.");
+		wish.show();
+		wish.count();
+	},
+	show: () => {
+		if (window.location.pathname.includes("wishlist") === true) {
+			let myWish = JSON.parse(localStorage.getItem("wish"));
+			let html = "";
+			if (!myWish || myWish.length <= 0) {
+				html +='<tr><td colspan="5"><strong>Wish list is empty.</strong></td></tr>';
+			}else{
+				myWish.forEach((ele) => {
+					html += `<tr>
+						<input type="hidden" name="cart-${ele.prod}" value='${JSON.stringify(ele)}' />
+						<td class="product-thumbnail"><a href="${base_url + ele.slug}.html"><img src="${base_url + ele.image}" alt=""></a></td>
+						<td class="product-name"><a href="${base_url + ele.slug}.html">${ele.p_title}</a></td>
+						<td class="product-price"><span class="amount">₹ ${ele.p_price}</span></td>
+						<td class="product-quantity">
+							<button class="tp-btn-h1" type="button" onclick="cart.add(${ele.prod})">Add To Cart</button>
+						</td>
+						<td class="product-remove"><a href="javascript:;" onclick="wish.delete(${ele.prod})"><i class="fa fa-times"></i></a></td>
+					</tr>`;
+				});
+			}
+
+			$("#show-wishlist").html(html);
+		}
+	}
 };
 
 const cart = {
 	add: (id) => {
-		let quantity = $("#input-quantity").val() != undefined ? $("#input-quantity").val() : 1;
-		if (isLoggedIn) {
+		let myCart = JSON.parse(localStorage.getItem("cart"));
+		let add = JSON.parse($(`input[name=cart-${id}]`).val());
+		add.quantity = $("#input-quantity").val() != undefined ? $("#input-quantity").val() : 1;
+		if (!myCart || myCart.length <= 0) {
+			localStorage.setItem("cart", JSON.stringify([add]));
 		} else {
-			let cart = JSON.parse(localStorage.getItem("cart"));
-			if (!cart) {
-				localStorage.setItem("cart", JSON.stringify([{ prod: id, quantity: quantity }]));
-      		}else{
-				let add = true;
-				cart.forEach(element => {
-					if (element.prod == id) add = false;
-				});
-				if (add === true){
-					cart.push({ prod: id, quantity: quantity });
-					localStorage.setItem("cart", JSON.stringify(cart));
-				}
+			let check = true;
+			myCart.forEach((element) => {
+			if (element.prod == id) check = false;
+			});
+			if (check === true) {
+			myCart.push(add);
+			localStorage.setItem("cart", JSON.stringify(myCart));
 			}
 		}
-		/* $.ajax({
-		type: "POST",
-		url: `${base_url}addCart`,
-		dataType: "JSON",
-		async:false,
-		data: { quantity: quantity, product: id},
-		beforeSend: function (xhr, opts) {
-			$("#loading").fadeIn(500);
-		},
-    	})
-		.done(function (response) {
-			$("#loading").fadeOut(500);
-			swalShow("success", "Product added to cart.");
-		})
-		.fail(function (data) {
-			$("#loading").fadeOut(500);
-			swalShow("error", "Something not going good.");
-		}); */
+		toastr["success"]("Product added to cart.");
+		cart.view();
 	},
-	view: (show = null) => {
-		let headerCart = '<div class="cart__mini"><ul><li><div class="cart__title"></div></li>';
-		// headerCart += '<li><div class="cart__item d-flex justify-content-center align-items-center"><h6>Your cart is empty</h6></div></li>';
-    	// headerCart += "</ul></div>";
-		if (!isLoggedIn) {
-
-    	}
-		
-		$.ajax({
-			type: "GET",
-			url: `${base_url}getCart`,
-			data:{cart: (!isLoggedIn) ? JSON.parse(localStorage.getItem("cart")) : []},
-			dataType: 'JSON'
-		})
-		.done(function (response) {
-			headerCart += '<li><div class="cart__item d-flex justify-content-center align-items-center"><h6>Your cart is empty</h6></div></li>';
-			headerCart += "</ul></div>";
-			$(".cart-total").html(response.total);
-			$(".cart-counts").html(response.counts);
-			$("#show-cart").html(headerCart);
-		})
-		.fail(function (data) {
-			swalShow("error", "Something not going good.");
+	delete: (id) => {
+		let myCart = JSON.parse(localStorage.getItem("cart")).filter(function(ele){
+			if (ele.prod !== id) return ele;
 		});
+		localStorage.setItem("cart", JSON.stringify(myCart));
+		toastr["success"]("Product removed from cart.");
+		cart.view();
+	},
+	update: (id, qty) => {
+		let myCart = JSON.parse(localStorage.getItem("cart")).filter(function(ele){
+			if (ele.prod === id) ele.quantity = qty;
+			return ele;
+		});
+		localStorage.setItem("cart", JSON.stringify(myCart));
+		toastr["success"]("Product quantity updated.");
+		cart.view();
+	},
+	show: () => {
+		if (window.location.pathname.includes("cart") === true) {
+			let cartBody = "";
+			let cartFoot = "";
+			let checkOut = "";
+			let total = 0;
+			let myCart = JSON.parse(localStorage.getItem("cart"));
+			if (!myCart || myCart.length <= 0) {
+				cartBody += `<tr><td colspan="6"><strong>Your cart is empty! Start shopping Now!</strong></td></tr>`;
+			}else{
+				myCart.forEach((ele) => {
+					cartBody += `<tr>
+						<td class="product-thumbnail"><a href="${base_url+ele.slug}.html"><img src="${base_url+ele.image}" alt=""></a></td>
+						<td class="product-name"><a href="${base_url+ele.slug}.html">${ele.p_title}</a></td>
+						<td class="product-price"><span class="amount">₹ ${ele.p_price}</span></td>
+						<td class="product-quantity">
+							<div class="cart-plus-minus"><input type="text" value="${ele.quantity}" readonly="" />
+							<div class="dec qtybutton" onclick="${ele.quantity > 1 ? `cart.update(${ele.prod}, ${ele.quantity - 1})` : ''}">-</div><div class="inc qtybutton" onclick="cart.update(${ele.prod}, ${ele.quantity+1})">+</div></div>
+						</td>
+						<td class="product-subtotal"><span class="amount">₹ ${ele.p_price * ele.quantity}</span></td>
+						<td class="product-remove"><a href="javascript:;" onclick="cart.delete(${ele.prod})"><i class="fa fa-times"></i></a></td>
+					</tr>`;
+					total += ele.p_price * ele.quantity;
+				});
+				cartFoot += `<tr>
+								<th colspan="4"></th>
+								<th class="product-remove">₹ ${total}</th>
+								<th></th>
+							</tr>`;
+				checkOut += `<div class="col-md-9">
+								<div class="coupon-all">
+									<div class="coupon">
+										<form>
+											<input id="coupon_code" class="input-text" maxlength="20" name="coupon_code" value="" placeholder="Coupon code" type="text">
+											<button class="tp-btn-h1" name="apply_coupon" type="button" onclick="applyCoupon(this.form);">Apply coupon</button>
+										</form>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="cart-page-total">
+									<a class="tp-btn-h1" href="${base_url}checkout.html">Proceed to checkout</a>
+								</div>
+							</div>`;
+			}
+			$("#cart-body").html(cartBody);
+			$("#cart-foot").html(cartFoot);
+			$("#check-out").html(checkOut);
+		}
+	},
+	view: () => {
+		let headerCart = '';
+		let total = 0;
+		let counts = 0;
+		let myCart = JSON.parse(localStorage.getItem("cart"));
+		
+		if (!myCart || myCart.length <= 0) {
+		headerCart +=
+			'<div class="cart__mini"><ul><li><div class="cart__title"></div></li>';
+		headerCart +=
+			'<li><div class="cart__item d-flex justify-content-center align-items-center"><h6>Your cart is empty! Start shopping Now!</h6></div></li>';
+		} else {
+		counts = myCart.length;
+		headerCart += `<div class="cart__mini"><ul><li>
+										<div class="cart__title"><h4>Your Cart</h4>
+										<span>(${counts} Item(s) in Cart)</span>
+										</div></li>`;
+		myCart.forEach((element) => {
+			total += element.quantity * element.p_price;
+			headerCart += `
+						<li>
+							<div class="cart__item d-flex justify-content-between align-items-center">
+							<div class="cart__inner d-flex">
+								<div class="cart__thumb">
+								<a href="${base_url + element.slug}">
+									<img src="${base_url + element.image}" alt="">
+								</a>
+								</div>
+								<div class="cart__details">
+								<h6><a href="${base_url + element.slug}"> ${element.p_title}  </a></h6>
+								<div class="cart__price">
+									<span>₹ ${element.p_price}</span>
+								</div>
+								</div>
+							</div>
+							<div class="cart__del">
+								<a href="javascript:;" onclick="cart.delete(${element.prod})"><i class="fal fa-times"></i></a>
+							</div>
+							</div>
+						</li>
+					`;
+		});
+		}
+		headerCart += "</ul></div>";
+		$(".cart-total").html(`₹ ${total}`);
+		$(".cart-counts").html(counts);
+		$("#show-cart").html(headerCart);
+		cart.show();
 	}
 };
 
+wish.count();
 cart.view();
+
+$("#register-form").validate({
+  rules: {
+    reg_mobile: {
+      required: true,
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+    },
+    otp: {
+      required: true,
+      minlength: 4,
+      maxlength: 4,
+      digits: true,
+    },
+    fullname: {
+      required: true,
+      minlength: 3,
+      maxlength: 100,
+    },
+    password: {
+      required: true,
+      minlength: 3,
+      maxlength: 100,
+    },
+    address: {
+      required: true,
+      minlength: 15,
+      maxlength: 255,
+    }
+  },
+  errorPlacement: function (error, element) {},
+  submitHandler: function (form) {
+    form.submit();
+  },
+});
+
+function saveData(form) {
+	$.ajax({
+		url: $(form).attr("action"),
+		type: $(form).attr("method"),
+		data: $(form).serialize(),
+		dataType: "json",
+		async: false,
+		beforeSend: function () {
+			$(form).find(":submit").hide();
+		},
+		success: function (res) {
+			
+		},
+		complete: function () {
+			$(form).find(":submit").show();
+		},
+	});
+	return;
+}
+
 // my custom code end
