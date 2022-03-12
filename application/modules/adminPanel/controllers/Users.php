@@ -32,7 +32,6 @@ class Users extends Admin_controller  {
             $sub_array[] = $sr;
             $sub_array[] = $row->fullname;
             $sub_array[] = $row->mobile;
-            $sub_array[] = $row->email;
             
             $action = '<div class="btn-group" role="group"><button class="btn btn-success dropdown-toggle" id="btnGroupVerticalDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="icon-settings"></span></button><div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" x-placement="bottom-start">';

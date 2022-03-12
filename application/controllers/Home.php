@@ -27,8 +27,7 @@ class Home extends Public_controller {
         $data['name'] = 'home';
         $data['banners'] = $this->main->getBanners();
         $data['prods'] = $this->main->getProds($this->show);
-		// echo $this->load->view('get-cart', $data, TRUE);
-		// re();
+
 		return $this->template->load('template', 'home', $data);
 	}
 	
@@ -50,13 +49,17 @@ class Home extends Public_controller {
 		return $this->template->load('template', 'cart', $data);
 	}
 
-	public function checkout()
+	public function product($cat, $sub_cat, $prod)
 	{
-		$data['title'] = 'Checkout';
-        $data['name'] = 'checkout';
-        $data['breadcrumb'] = $this->breadcrumb.'checkout.jpg';
-
-		return $this->template->load('template', 'checkout', $data);
+		$data['prod'] = $this->main->getProd($cat, $sub_cat, $prod);
+		if ($data['prod']) {
+			$data['title'] = 'Product';
+			$data['name'] = 'product';
+			
+			return $this->template->load('template', 'product', $data);
+		}else{
+			return $this->error_404();
+		}
 	}
 
 	public function getCart()
@@ -73,9 +76,18 @@ class Home extends Public_controller {
 	public function addCart()
 	{
 		check_ajax();
-
+		
 		$id = $this->main->addCart($this->session->userId);
 
-		die(json_encode(['success' => $id, 'message' => "Product added to cart."]));
+		die(json_encode(['success' => 1, 'message' => "Product added to cart."]));
+	}
+
+	public function addWish()
+	{
+		check_ajax();
+
+		$id = $this->main->addWish($this->session->userId);
+
+		die(json_encode(['success' => 1, 'message' => "Product added to cart."]));
 	}
 }

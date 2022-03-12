@@ -19,7 +19,7 @@
       <?= link_tag('assets/flaticon/flaticon.css', 'stylesheet', 'text/css') ?>
       <?= link_tag('assets/css/font-awesome-pro.css', 'stylesheet', 'text/css') ?>
       <?= link_tag('assets/css/default.css', 'stylesheet', 'text/css') ?>
-      <?= link_tag('assets/css/style.css', 'stylesheet', 'text/css') ?>
+      <?= link_tag('assets/css/style.css?v=1.0.1', 'stylesheet', 'text/css') ?>
       <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
    </head>
    <body>
@@ -130,7 +130,7 @@
                               <?= form_input([
                                  'class' => "search-input",
                                  'type' => "text",
-                                 'placeholder' => "I'm searching for...",
+                                 'placeholder' => "क्या चाहिए...?",
                                  'name' => "search",
                                  'value' => $this->input->get('search')
                                  ]); ?>
@@ -155,7 +155,7 @@
                         <div class="header-action">
                            <div class="block-userlink">
                               <?= anchor(
-                                 ($this->session->userId) ? 'logout' : 'login',
+                                 ($this->session->userId) ? 'user' : 'login',
                                  '<i class="flaticon-user"></i><span class="text"><span class="sub">'.
                                  (($this->session->userId) ? 'Logout' : 'Login').
                                  '</span>My Account </span>',
@@ -236,7 +236,7 @@
                               <ul>
                                  <li><?= anchor('', "Home", 'class="'.($name === 'home' ? 'active' : '').'"'); ?></li>
                                  <li><?= anchor('about-us', "About Us", 'class="'.($name === 'about' ? 'active' : '').'"'); ?></li>
-                                 <li><?= anchor('contact-us', "Contact Us", 'class="'.($name === 'contact' ? 'active' : '').'"'); ?></li>
+                                 <li><?= anchor('become-partner', "Become partner", 'class="'.($name === 'become_partner' ? 'active' : '').'"'); ?></li>
                               </ul>
                            </nav>
                         </div>
@@ -309,18 +309,19 @@
                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
                               <div class="footer__widget">
                                  <div class="footer__widget-title">
-                                    <h4>Customer Care</h4>
+                                    <h4>Follow us</h4>
                                  </div>
                                  <div class="footer__widget-content">
                                     <div class="footer__link">
-                                       <ul>
-                                          <li><?= anchor('faq', 'New Customers') ?></li>
-                                          <li><?= anchor('faq', 'How to use Account') ?></li>
-                                          <li><?= anchor('faq', 'Placing an Order') ?></li>
-                                          <li><?= anchor('faq', 'Payment Methods') ?></li>
-                                          <li><?= anchor('faq', 'Delivery &amp; Dispatch') ?></li>
-                                          <li><?= anchor('faq', 'Problems with Order') ?></li>
-                                       </ul>
+                                       <div class="cta-social">
+                                          <div class="social-icon">
+                                                <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                                                <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+                                                <a href="#" class="youtube"><i class="fab fa-youtube"></i></a>
+                                                <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                                                <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                                          </div>
+                                       </div>
                                     </div>
                                  </div>
                               </div>
@@ -335,7 +336,6 @@
                                        <ul>
                                           <li><?= anchor('faq', 'Help Center') ?></li>
                                           <li><?= anchor('faq', 'Contact Us') ?></li>
-                                          <li><?= anchor('faq', 'Report Abuse') ?></li>
                                           <li><?= anchor('faq', 'Submit a Dispute') ?></li>
                                           <li><?= anchor('faq', 'Policies &amp; Rules') ?></li>
                                        </ul>
@@ -400,14 +400,14 @@
                                              <i class="fal fa-headset"></i>
                                           </div>
                                           <div class="text">
-                                             <h4>Got Question? Call us 24/7!</h4>
-                                             <span><a href="tel:100-123-456-7890">(+100) 123 456 7890</a></span>
+                                             <h4>Got Question? Connect!</h4>
+                                             <span><a href="tel:8320406016">(+91) 83 20 40 60 16</a></span>
                                           </div>
                                        </div>
                                        <div class="footer__info">
                                           <ul>
                                              <li>
-                                                <span>Add:  <a target="_blank" href="https://goo.gl/maps/c82DDZ8ALvL878Bv8">Walls Street 68, Mahattan, New York, USA</a></span>
+                                                <span><a>Ahmedabad, Gujarat</a></span>
                                              </li>
                                           </ul>
                                        </div>
@@ -419,6 +419,20 @@
                      </div>
                   </div>
                </div>
+            </div>
+            <div class="footer__bottom">
+                <div class="container">
+                    <div class="footer__bottom-content pt-55 pb-45">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="copy-right-area text-center">
+                                    <p>Visitor No. <span><?= $this->main->getVisitors() ?></span></p>
+                                    <p>Copyright © <span>उत्पादक से.</span> All Rights Reserved. Powered by <a href="https://densetek.com/"><span class="main-color">Densetek Infotech</span></a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
          </div>
       </footer>
@@ -458,11 +472,13 @@
       <?= form_hidden('error', $this->session->error) ?>
       <?= form_hidden('success', $this->session->success) ?>
       <?php endif ?>
-      <?php if(in_array($name, ['login', 'register'])): ?>
+      <?= form_hidden('isLoggedIn', $this->session->userId ? true : false) ?>
+      <?= form_hidden('discount', $this->session->coupon_discount ? $this->session->coupon_discount : 0) ?>
+      <?php if(in_array($name, ['login', 'register', 'forgot_password', 'checkout', 'profile'])): ?>
          <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
          <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
       <?php endif ?>
       <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-      <?= script('assets/js/main.js?v=<?= time() ?>') ?>
+      <?= script('assets/js/main.js?v='.time()) ?>
    </body>
 </html>

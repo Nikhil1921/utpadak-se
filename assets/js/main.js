@@ -306,6 +306,7 @@
 	$('#showcoupon').on('click', function () {
 		$('#checkout_coupon').slideToggle(900);
 	});
+	$("#showcoupon").trigger('click');
 
 	////////////////////////////////////////////////////
 	// 19. Create An Account Toggle Js
@@ -663,6 +664,114 @@ toastr.options = {
   hideMethod: "fadeOut",
 };
 
+let cartReq = wishReq = "ToCancelPrevReq";
+let discount = $("input[name=discount]").val() ? $("input[name=discount]").val() : 0;
+let delivery = 0;
+
+const addAddress = (button) => {
+	let data = {address: $("input[name=address]").val(), pincode: $("input[name=pincode]").val()};
+	$.ajax({
+		type: "POST",
+		url: `${base_url}add-address`,
+		data: data,
+		dataType: "JSON",
+		beforeSend: function (xhr, opts) {
+			$(button).attr("disabled", true);
+		},
+	}).done((res) => {
+		toastr[res.status](res.message);
+		setTimeout(() => {
+			if (res.status === 'success') location.reload();
+		}, 1500);
+		$(button).attr("disabled", false);
+	});
+};
+
+const checkAddress = (select) => {
+	$.ajax({
+		type: "GET",
+		url: `${base_url}check-address`,
+		data: {add_id:  $(select).val()},
+		dataType: "JSON",
+		beforeSend: function (xhr, opts) {
+			$("#loading").fadeIn(500);
+		},
+	}).done((res) => {
+		$("#loading").fadeOut(500);
+		if (res.status === 'success') {
+			discount = parseInt(res.discount);
+			delivery = parseInt(res.charge);
+			checkOut();
+    	}
+		toastr[res.status](res.message);
+	});
+};
+
+const checkOut = () => {
+	let myCart = JSON.parse(localStorage.getItem("cart"));
+	
+	if (! myCart || myCart.length < 1) {
+		$("#coupon-section").html(``);
+		$("#checkout-section").html(`<div class="container">
+			<div class="row">
+				<div class="col-lg-3"></div>
+				<div class="col-lg-6">
+					<h4>Your cart is empty!</h4><br />
+					<a class="tp-btn-h1" href="${base_url}"><i class="fa fa-shopping-cart"></i> Start shopping Now!</a>
+				</div>
+			</div>
+		</div>`);
+  	}else{
+		let total = 0;
+		let details = `<div class="your-order mb-30 ">
+							<h3>Your order</h3>
+							<div class="your-order-table table-responsive" id="checkout-order">
+							<table>
+								<thead>
+									<tr>
+										<th class="product-name">Product</th>
+										<th class="product-total">Total</th>
+									</tr>
+								</thead>
+								<tbody>`;
+		myCart.forEach((ele) => {
+			total += ele.p_price * ele.quantity;
+			details += `<tr class="cart_item">
+							<td class="product-name">
+								${ele.p_title} <strong class="product-quantity"> × ${ele.quantity}</strong>
+							</td>
+							<td class="product-total">
+								<span class="amount">₹ ${ele.p_price * ele.quantity}</span>
+							</td>
+						</tr>`;
+		});
+		disAmount = (total * discount) / 100;
+		details += `</tbody><tfoot>
+						${disAmount > 0 ? `<tr class="cart-subtotal">
+						<th>Discount</th>
+						<td><span class="amount">₹ ${disAmount.toFixed(2)}</span></td>
+						</tr>` : ""}
+						<tr class="shipping">
+							<th>Shipping</th>
+							<td><span class="amount">₹ ${delivery.toFixed(2)}</span></td>
+						</tr>
+						<tr class="order-total">
+							<th>Order Total</th>
+							<td><strong><span class="amount">₹ ${(total + delivery - disAmount).toFixed(2)}</span></strong>
+							</td>
+						</tr>
+						</tfoot></table></div>
+						<div class="payment-method">
+							<div class="order-button-payment mt-20">
+								<button type="submit" class="tp-btn-h1">Place order</button>
+							</div>
+						</div>
+					</div>`;
+
+		$("#order-details").html(details);
+	}
+};
+
 const wish = {
 	add: (id) => {
 		let myWish = JSON.parse(localStorage.getItem("wish"));
@@ -687,13 +796,14 @@ const wish = {
 		let count = !myWish ? 0 : myWish.length;
 		$("#wishlist-count").html(count);
 		wish.show();
+		if (isLoggedIn) wish.save();
 	},
 	delete: (id) => {
 		let myWish = JSON.parse(localStorage.getItem("wish")).filter(function(ele){
 			if (ele.prod !== id) return ele;
 		});
 		localStorage.setItem("wish", JSON.stringify(myWish));
-		toastr["success"]("Product removed from wishlist.");
+		/* toastr["success"]("Product removed from wishlist."); */
 		wish.show();
 		wish.count();
 	},
@@ -720,6 +830,27 @@ const wish = {
 
 			$("#show-wishlist").html(html);
 		}
+	},
+	save: () => {
+		let myWish=[];
+
+		JSON.parse(localStorage.getItem("wish")).forEach((ele) => {
+			myWish.push({ prod: ele.prod });
+		});
+
+		wishReq = $.ajax({
+					type: "POST",
+					url: `${base_url}addWish`,
+					data: {
+						wish: myWish,
+					},
+					dataType: "JSON",
+					beforeSend: function (xhr, opts) {
+						if (wishReq != 'ToCancelPrevReq' && wishReq.readyState < 4) {
+							wishReq.abort();
+						}
+					},
+				});
 	}
 };
 
@@ -748,7 +879,7 @@ const cart = {
 			if (ele.prod !== id) return ele;
 		});
 		localStorage.setItem("cart", JSON.stringify(myCart));
-		toastr["success"]("Product removed from cart.");
+		/* toastr["success"]("Product removed from cart."); */
 		cart.view();
 	},
 	update: (id, qty) => {
@@ -757,14 +888,20 @@ const cart = {
 			return ele;
 		});
 		localStorage.setItem("cart", JSON.stringify(myCart));
-		toastr["success"]("Product quantity updated.");
+		/* toastr["success"]("Product quantity updated."); */
 		cart.view();
 	},
 	show: () => {
 		if (window.location.pathname.includes("cart") === true) {
 			let cartBody = "";
 			let cartFoot = "";
-			let checkOut = "";
+			let checkOut = `<div class="col-md-9">
+								<div class="coupon-all">
+									<div class="coupon">
+										<a class="tp-btn-h1" href="${base_url}"><i class="fa fa-shopping-cart"></i> add products</a>
+									</div>
+								</div>
+							</div>`;
 			let total = 0;
 			let myCart = JSON.parse(localStorage.getItem("cart"));
 			if (!myCart || myCart.length <= 0) {
@@ -789,16 +926,7 @@ const cart = {
 								<th class="product-remove">₹ ${total}</th>
 								<th></th>
 							</tr>`;
-				checkOut += `<div class="col-md-9">
-								<div class="coupon-all">
-									<div class="coupon">
-										<form>
-											<input id="coupon_code" class="input-text" maxlength="20" name="coupon_code" value="" placeholder="Coupon code" type="text">
-											<button class="tp-btn-h1" name="apply_coupon" type="button" onclick="applyCoupon(this.form);">Apply coupon</button>
-										</form>
-									</div>
-								</div>
-							</div>
+				checkOut += `
 							<div class="col-md-3">
 								<div class="cart-page-total">
 									<a class="tp-btn-h1" href="${base_url}checkout.html">Proceed to checkout</a>
@@ -822,102 +950,186 @@ const cart = {
 		headerCart +=
 			'<li><div class="cart__item d-flex justify-content-center align-items-center"><h6>Your cart is empty! Start shopping Now!</h6></div></li>';
 		} else {
-		counts = myCart.length;
-		headerCart += `<div class="cart__mini"><ul><li>
-										<div class="cart__title"><h4>Your Cart</h4>
-										<span>(${counts} Item(s) in Cart)</span>
-										</div></li>`;
-		myCart.forEach((element) => {
-			total += element.quantity * element.p_price;
-			headerCart += `
-						<li>
-							<div class="cart__item d-flex justify-content-between align-items-center">
-							<div class="cart__inner d-flex">
-								<div class="cart__thumb">
-								<a href="${base_url + element.slug}">
-									<img src="${base_url + element.image}" alt="">
-								</a>
+			counts = myCart.length;
+			headerCart += `<div class="cart__mini"><ul><li>
+											<div class="cart__title"><h4>Your Cart</h4>
+											<span>(${counts} Item(s) in Cart)</span>
+											</div></li>`;
+			myCart.forEach((element) => {
+				total += element.quantity * element.p_price;
+				headerCart += `
+							<li>
+								<div class="cart__item d-flex justify-content-between align-items-center">
+								<div class="cart__inner d-flex">
+									<div class="cart__thumb">
+									<a href="${base_url + element.slug}">
+										<img src="${base_url + element.image}" alt="">
+									</a>
+									</div>
+									<div class="cart__details">
+									<h6><a href="${base_url + element.slug}"> ${element.p_title}  </a></h6>
+									<div class="cart__price">
+										<span>₹ ${element.p_price}</span>
+									</div>
+									</div>
 								</div>
-								<div class="cart__details">
-								<h6><a href="${base_url + element.slug}"> ${element.p_title}  </a></h6>
-								<div class="cart__price">
-									<span>₹ ${element.p_price}</span>
+								<div class="cart__del">
+									<a href="javascript:;" onclick="cart.delete(${element.prod})"><i class="fal fa-times"></i></a>
 								</div>
 								</div>
-							</div>
-							<div class="cart__del">
-								<a href="javascript:;" onclick="cart.delete(${element.prod})"><i class="fal fa-times"></i></a>
-							</div>
-							</div>
-						</li>
-					`;
-		});
+							</li>
+						`;
+			});
 		}
+		if (isLoggedIn) cart.save();
 		headerCart += "</ul></div>";
 		$(".cart-total").html(`₹ ${total}`);
 		$(".cart-counts").html(counts);
 		$("#show-cart").html(headerCart);
 		cart.show();
+	},
+	save: () => {
+		let myCart=[];
+
+		JSON.parse(localStorage.getItem("cart")).forEach((ele) => {
+			myCart.push({ prod: ele.prod, qty: ele.quantity });
+		});
+
+		cartReq = $.ajax({
+					type: "POST",
+					url: `${base_url}addCart`,
+					data: {
+						cart: myCart,
+					},
+					dataType: "JSON",
+					beforeSend: function (xhr, opts) {
+						if (cartReq != 'ToCancelPrevReq' && cartReq.readyState < 4) {
+							cartReq.abort();
+						}
+					},
+				});
+
+		if (window.location.pathname.includes("checkout") === true) {
+			checkOut();
+    	}
 	}
 };
 
 wish.count();
 cart.view();
 
-$("#register-form").validate({
-  rules: {
-    reg_mobile: {
-      required: true,
-      minlength: 10,
-      maxlength: 10,
-      digits: true,
-    },
-    otp: {
-      required: true,
-      minlength: 4,
-      maxlength: 4,
-      digits: true,
-    },
-    fullname: {
-      required: true,
-      minlength: 3,
-      maxlength: 100,
-    },
-    password: {
-      required: true,
-      minlength: 3,
-      maxlength: 100,
-    },
-    address: {
-      required: true,
-      minlength: 15,
-      maxlength: 255,
-    }
-  },
-  errorPlacement: function (error, element) {},
-  submitHandler: function (form) {
-    form.submit();
-  },
-});
+if ($("#login-form").length > 0) {
+	$("#login-form").validate({
+	  rules: {
+		mobile: {
+		  required: true,
+		  minlength: 10,
+		  maxlength: 10,
+		  digits: true,
+		},
+		pass: {
+		  required: true,
+		  minlength: 3,
+		  maxlength: 100,
+		}
+	  },
+	  errorPlacement: function (error, element) {},
+	  submitHandler: function (form) {
+		form.submit();
+	  },
+	});
+}
 
-function saveData(form) {
-	$.ajax({
-		url: $(form).attr("action"),
-		type: $(form).attr("method"),
-		data: $(form).serialize(),
-		dataType: "json",
-		async: false,
-		beforeSend: function () {
-			$(form).find(":submit").hide();
+if ($("#register-form").length > 0) {
+	$("#register-form").validate({
+    rules: {
+      reg_mobile: {
+        required: true,
+        minlength: 10,
+        maxlength: 10,
+        digits: true,
+      },
+      otp: {
+        required: true,
+        minlength: 4,
+        maxlength: 4,
+        digits: true,
+      },
+      fullname: {
+        required: true,
+        minlength: 3,
+        maxlength: 100,
+      },
+      password: {
+        required: true,
+        minlength: 3,
+        maxlength: 100,
+      },
+      c_password: {
+        required: true,
+        minlength: 3,
+        maxlength: 100,
+        equalTo: "#password",
+      },
+      address: {
+        required: true,
+        minlength: 15,
+        maxlength: 255,
+      },
+      coupon_code: {
+        required: true,
+        minlength: 5,
+        maxlength: 20,
+      },
+    },
+    errorPlacement: function (error, element) {},
+    submitHandler: function (form) {
+      form.submit();
+    },
+  });
+}
+
+if ($("#checkout-form").length > 0) {
+	$("#checkout-form").validate({
+		rules: {
+		mobile: {
+			required: true,
+			minlength: 10,
+			maxlength: 10,
+			digits: true,
 		},
-		success: function (res) {
-			
+		fullname: {
+			required: true,
+			minlength: 3,
+			maxlength: 100,
 		},
-		complete: function () {
-			$(form).find(":submit").show();
+		add_id: {
+			required: true,
+		},
+		},
+		errorPlacement: function (error, element) {},
+		submitHandler: function (form) {
+			$.ajax({
+				type: "POST",
+				url: $(form).attr('action'),
+				data: $(form).serialize(),
+				dataType: "JSON",
+				beforeSend: function (xhr, opts) {
+					$("#loading").fadeIn(500);
+				},
+			}).done((res) => {
+				$("#loading").fadeOut(500);
+				if(res.status === 'success'){
+					localStorage.setItem("cart", JSON.stringify([]));
+					setTimeout(() => {
+						window.location.href = `${base_url}user/order?order=${res.id}`;
+					}, 1500);
+				}
+				toastr[res.status](res.message);
+			});
+			return;
 		},
 	});
-	return;
 }
 
 // my custom code end

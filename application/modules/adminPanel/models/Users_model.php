@@ -6,9 +6,9 @@
 class Users_model extends MY_Model
 {
 	public $table = "users u";
-	public $select_column = ['u.id', 'u.fullname', 'u.mobile', 'u.email'];
-	public $search_column = ['u.id', 'u.fullname', 'u.mobile', 'u.email'];
-    public $order_column = [null, 'u.fullname', 'u.mobile', 'u.email', null];
+	public $select_column = ['u.id', 'u.fullname', 'u.mobile'];
+	public $search_column = ['u.id', 'u.fullname', 'u.mobile'];
+    public $order_column = [null, 'u.fullname', 'u.mobile', null];
 	public $order = ['u.id' => 'DESC'];
 
 	public function make_query()

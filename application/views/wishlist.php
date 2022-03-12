@@ -22,6 +22,11 @@
                     </table>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="cart-page-total">
+                    <?= anchor('', '<i class="fa fa-shopping-cart"></i> add products', 'class="tp-btn-h1"'); ?>
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -22,22 +22,7 @@
                         </tfoot>
                     </table>
                 </div>
-                <div class="row" id="check-out">
-                    <!-- <div class="col-md-9">
-                        <div class="coupon-all">
-                            <div class="coupon">
-                                <input id="coupon_code" class="input-text" name="coupon_code" value="" placeholder="Coupon code" type="text">
-                                <button class="tp-btn-h1" name="apply_coupon" type="submit">Apply
-                                    coupon</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="cart-page-total">
-                            <a class="tp-btn-h1" href="checkout.html">Proceed to checkout</a>
-                        </div>
-                    </div> -->
-                </div>
+                <div class="row" id="check-out"></div>
             </div>
         </div>
     </div>

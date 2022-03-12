@@ -45,6 +45,7 @@ class Products extends Admin_controller  {
             $action = '<div class="btn-group" role="group"><button class="btn btn-success dropdown-toggle" id="btnGroupVerticalDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="icon-settings"></span></button><div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" x-placement="bottom-start">';
             
+            $action .= anchor($this->redirect."/multi-images/".e_id($row->id), '<i class="fa fa-image"></i> Images</a>', 'class="dropdown-item"');
             $action .= anchor($this->redirect."/update/".e_id($row->id), '<i class="fa fa-edit"></i> Edit</a>', 'class="dropdown-item"');
         
             $action .= form_open($this->redirect.'/delete', 'id="'.e_id($row->id).'"', ['id' => e_id($row->id)]).
@@ -162,6 +163,55 @@ class Products extends Admin_controller  {
             $id = $this->main->update(['id' => d_id($this->input->post('id'))], ['is_deleted' => 1], $this->table);
             flashMsg($id, "$this->title deleted.", "$this->title not deleted.", $this->redirect);
         }
+    }
+
+	public function multi_images($id)
+    {
+        if ($this->input->server('REQUEST_METHOD') === 'GET') {
+            $data['title'] = $this->title;
+            $data['name'] = $this->name;
+            $data['operation'] = "Upload Images";
+            $data['url'] = $this->redirect;
+            $data['dropzone'] = true;
+            $data['id'] = $id;
+    
+            return $this->template->load('template', "$this->redirect/multi-images", $data);
+        }else{
+            $files = $_FILES;
+            $imgs = $this->main->check($this->table, ['id' => d_id($id)], 'multi_image');
+            $imgs = $imgs ? explode(', ', $imgs) : [];
+            for ($i=0; $i < count($files['image']['name']); $i++) {
+                $_FILES['userfile']['name']= $files['image']['name'][$i];
+                $_FILES['userfile']['type']= $files['image']['type'][$i];
+                $_FILES['userfile']['tmp_name']= $files['image']['tmp_name'][$i];
+                $_FILES['userfile']['error']= $files['image']['error'][$i];
+                $_FILES['userfile']['size']= $files['image']['size'][$i];
+
+                $save = $this->uploadImage('userfile', 'jpg|jpeg|png', ['max_width' => 400, 'max_height' => 400, 'min_width' => 230, 'min_height' => 230], time()+$i, ['width' => 82, 'height' => 82]);
+                if (!$save['error']) {
+                    if (!$imgs) {
+                        $imgs[] = $save['message'];
+                    }else{
+                        array_push($imgs, $save['message']);
+                    }
+                }
+            }
+
+            $u_id = $this->main->update(['id' => d_id($id)], ['multi_image' => implode(', ', $imgs)], $this->table);
+            
+            flashMsg($id, "$this->title updated.", "$this->title not updated. Try again.", "$this->redirect/multi-images/$id");
+        }
+    }
+
+    public function remove_image($id, $image)
+    {
+        $imgs = $this->main->check($this->table, ['id' => d_id($id)], 'multi_image');
+        $imgs = $imgs ? explode(', ', $imgs) : [];
+        re($imgs);
+        /* 
+
+        $u_id = $this->main->update(['id' => d_id($id)], ['multi_image' => implode(', ', $imgs)], $this->table);
+        flashMsg($id, "$this->title updated.", "$this->title not updated. Try again.", "$this->redirect/multi-images/$id"); */
     }
 
     protected $validate = [

@@ -5,22 +5,40 @@
             <div class="col-lg-6">
                 <div class="basic-login mb-50">
                     <h5>Login</h5>
-                    <form action="#">
-                        <label for="name">Username or email address  <span>*</span></label>
-                        <input id="name" type="text" placeholder="Enter Username">
-                        <label for="pass">Password <span>*</span></label>
-                        <input id="pass" type="password" placeholder="Enter password...">
+                    <?= form_open('login', 'id="login-form"'); ?>
+                        <?= form_label('Mobile No. <span>*</span>', 'otp'); ?>
+                        <?= form_input([
+                                    'id'          => "mobile",
+                                    'placeholder' => "Mobile No.",
+                                    'name'        => "mobile",
+                                    'value'       => set_value('mobile'),
+                                    'maxlength'   => 10
+                                ]); ?>
+                        <?= form_error('mobile'); ?>
+                        <?= form_label('Password <span>*</span>', 'pass'); ?>
+                        <?= form_input([
+                                    'id'          => "pass",
+                                    'type'        => "password",
+                                    'placeholder' => "Password",
+                                    'name'        => "pass",
+                                    'maxlength'   => 100
+                                ]); ?>
+                        <?= form_error('pass'); ?>
                         <div class="login-action mb-10 fix">
                             <span class="log-rem f-left">
-                                <input id="remember" type="checkbox">
-                                <label for="remember">Remember me</label>
+                                <input id="show-password" type="checkbox" onclick="document.getElementById('pass').type = (this.checked === true ? 'text' : 'password' );">
+                                <label for="show-password">Show password</label>
                             </span>
                             <span class="forgot-login f-right">
-                                <a href="#">Lost your password?</a>
+                                <?= anchor('forgotPassword', 'Lost your password?'); ?>
                             </span>
                         </div>
-                        <a href="login.html" class="tp-in-btn w-100">log in</a>
-                    </form>
+                        <?= form_button([
+                                'type'    => 'submit',
+                                'class'   => 'tp-in-btn w-100',
+                                'content' => 'log in'
+                            ]); ?>
+                    <?= form_close(); ?>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -39,10 +57,47 @@
                                     'maxlength'   => 4
                                 ]);
                             echo form_error('otp');
+                            echo form_button([
+                                'type'    => 'submit',
+                                'class'   => 'tp-in-btn w-100',
+                                'content' => 'Verify OTP'
+                            ]);
                             break;
 
                         case $this->session->verified:
-                            
+                            echo form_open('register/register', 'id="register-form"');
+                            echo form_label('Fullname <span>*</span>', 'fullname');
+                            echo form_input([
+                                    'id'          => "fullname",
+                                    'placeholder' => "Fullname",
+                                    'name'        => "fullname",
+                                    'value'       => set_value('fullname'),
+                                    'maxlength'   => 100
+                                ]);
+                            echo form_error('fullname');
+                            echo form_label('Password <span>*</span>', 'password');
+                            echo form_input([
+                                    'id'          => "password",
+                                    'type'        => "password",
+                                    'placeholder' => "Password",
+                                    'name'        => "password",
+                                    'maxlength'   => 100
+                                ]);
+                            echo form_error('password');
+                            /* echo form_label('Address <span>*</span>', 'address');
+                            echo form_input([
+                                    'id'          => "address",
+                                    'placeholder' => "Address",
+                                    'name'        => "address",
+                                    'value'       => set_value('address'),
+                                    'maxlength'   => 255
+                                ]);
+                            echo form_error('address'); */
+                            echo form_button([
+                                'type'    => 'submit',
+                                'class'   => 'tp-in-btn w-100',
+                                'content' => 'Register'
+                            ]);
                             break;
                         
                         default:
@@ -56,13 +111,13 @@
                                     'maxlength'   => 10
                                 ]);
                             echo form_error('reg_mobile');
+                            echo form_button([
+                                'type'    => 'submit',
+                                'class'   => 'tp-in-btn w-100',
+                                'content' => 'Send OTP'
+                            ]);
                             break;
                     endswitch;
-                        echo form_button([
-                            'type'    => 'submit',
-                            'class'   => 'tp-in-btn w-100',
-                            'content' => 'Register'
-                        ]);
                     echo form_close(); ?>
                 </div>
             </div>
