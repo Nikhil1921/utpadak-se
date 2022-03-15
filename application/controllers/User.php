@@ -211,11 +211,25 @@ class User extends Public_controller {
 
     public function profile()
 	{
-        $data['title'] = 'Profile';
-        $data['name'] = 'profile';
-		$data['user'] = $this->main->get('users', 'fullname, mobile', ['id' => $this->session->userId]);
-        
-		return $this->template->load('template', 'user/profile', $data);
+        $this->form_validation->set_rules('fullname', 'Fullname', 'required|max_length[100]|trim', [
+                'required'      => '%s is required.',
+                'max_length'    => 'Max 100 characters allowed.']);
+
+        $this->form_validation->set_rules('reg_mobile', 'Mobile No.', 'required|is_unique[users.mobile]|exact_length[10]|integer', [
+                'required'      => '%s is required.',
+                'exact_length'  => '%s is invalid.',
+                'integer'       => '%s is invalid.',
+                'is_unique'     => 'This %s already in use.']);
+                
+        if ($this->form_validation->run() == TRUE){
+            
+        }else{
+            $data['title'] = 'Profile';
+            $data['name'] = 'profile';
+            $data['user'] = $this->main->get('users', 'fullname, mobile', ['id' => $this->session->userId]);
+            
+            return $this->template->load('template', 'user/profile', $data);
+        }
     }
 
     public function logout()

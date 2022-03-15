@@ -90,6 +90,9 @@
                             <li>
                                 <?= anchor(admin('orders'), '<i data-feather="file"></i><span> Orders</span>', 'class="sidebar-header '.($name == 'orders' ? 'active' : '').'"') ?>
                             </li>
+                            <li>
+                                <?= anchor(admin('pincode'), '<i data-feather="file"></i><span> Pincodes</span>', 'class="sidebar-header '.($name == 'pincode' ? 'active' : '').'"') ?>
+                            </li>
                         </ul>
                     </div>
                 </div>
