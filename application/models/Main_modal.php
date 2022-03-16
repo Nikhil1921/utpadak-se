@@ -16,37 +16,17 @@ class Main_modal extends MY_Model
 
 	public function getBanners()
     {
-        return $this->getAll('banners', "title, sub_title, CONCAT('".base_url($this->banners)."', banner) banner", []);
+        return $this->getAll('banners', "title, sub_title, CONCAT('".base_url($this->banners)."', banner) banner", ['is_deleted' => 0]);
     }
 
 	public function getCart($u_id)
     {
-        if ($u_id) {
-            return [];
-        }else{
-            /* if ($this->input->get('cart')) {
-                return array_map(function($id){
-                    $prod = $this->db->select('p.p_title, p.p_price, CONCAT("'.$this->products.'", p.image) image, CONCAT(c.cat_slug, "/", sc.cat_slug, "/", p.p_slug) slug')
-                                        ->from('products p')
-                                        ->where(['p.id' => d_id($id['prod'])])
-                                        ->where(['c.is_deleted' => 0, 'sc.is_deleted' => 0, 'p.is_deleted' => 0])
-                                        ->join('category c', 'c.id = p.cat_id')
-                                        ->join('category sc', 'sc.id = p.sub_cat_id')
-                                        ->get()->row_array();
-                    if ($prod){ $prod['qty'] = $id['quantity']; $prod['id'] = $id['prod']; return $prod;}
-                }, $this->input->get('cart'));
-            }else */
-                return [];
-        }
+        return [];
     }
 
 	public function getWishlist($u_id)
     {
-        if ($u_id) {
-            return [];
-        }else{
-            return [];
-        }
+        return [];
     }
 
 	public function getProds($show)
@@ -64,6 +44,31 @@ class Main_modal extends MY_Model
         }
         
         return $return;
+    }
+
+	public function makeQuery($where)
+    {
+        $this->db->select('p.id, p.p_title, p.p_price, CONCAT("'.$this->products.'", p.image) image, CONCAT(c.cat_slug, "/", sc.cat_slug, "/", p.p_slug) slug, LEFT(p.description, 230) description')
+                ->from('products p')
+                ->where($where)
+                ->where(['c.is_deleted' => 0, 'sc.is_deleted' => 0, 'p.is_deleted' => 0])
+                ->join('category c', 'c.id = p.cat_id')
+                ->join('category sc', 'sc.id = p.sub_cat_id');
+    }
+
+	public function getProducts($start, $end, $where)
+    {
+        
+        $this->makeQuery($where);
+        
+        return $this->db->limit($end, $start)->get()->result();
+    }
+
+	public function prodCount($where)
+    {
+        
+        $this->makeQuery($where);
+        return $this->db->get()->num_rows();
     }
 
     public function addCart($u_id)

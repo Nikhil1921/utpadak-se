@@ -23,6 +23,7 @@
             <div class="col-xl-6">
                 <div class="product__details-nav d-sm-flex align-items-start">
                     <ul class="nav nav-tabs flex-sm-column justify-content-between" id="" role="tablist">
+                        <?php if ($prod->multi_image): ?>
                         <?php foreach (explode(', ', $prod->multi_image) as $k => $img): ?>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link <?= $k === 0 ? 'active' : '' ?>" id="thumb<?= $k ?>-tab" data-bs-toggle="tab" data-bs-target="#thumb<?= $k ?>" type="button" role="tab" aria-controls="thumb<?= $k ?>" aria-selected="true">
@@ -30,17 +31,29 @@
                             </button>
                         </li>
                         <?php endforeach ?>
+                        <?php else: ?>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="thumb-tab" data-bs-toggle="tab" data-bs-target="#thumb" type="button" role="tab" aria-controls="thumb" aria-selected="true">
+                                    <?= img(['src' => $prod->image, 'height' => 85]); ?>
+                                </button>
+                            </li>
+                        <?php endif ?>
                     </ul>
                     <div class="product__details-thumb">
                         <div class="tab-content" id="productThumbContent">
+                            <?php if ($prod->multi_image): ?>
                             <?php foreach (explode(', ', $prod->multi_image) as $k => $img): ?>
                             <div class="tab-pane fade show <?= $k === 0 ? 'active' : '' ?>" id="thumb<?= $k ?>" role="tabpanel" aria-labelledby="thumb<?= $k ?>-tab">
                                 <div class="product__details-nav-thumb w-img">
                                     <?= img($prod->base.$img); ?>
-                                    <!-- <iframe src="https://www.youtube.com/embed/watch?v=zHjIVHgWTiI" frameborder="0"></iframe> -->
                                 </div>
                             </div>
                             <?php endforeach ?>
+                            <?php else: ?>
+                                <div class="product__details-nav-thumb w-img">
+                                    <?= img(['src' => $prod->image, 'height' => 420]); ?>
+                                </div>
+                            <?php endif ?>
                         </div>
                     </div>
                 </div>
@@ -56,19 +69,21 @@
                     </div>
                     <div class="cart-option mb-15">
                         <div class="product-quantity mr-20">
-                            <div class="cart-plus-minus p-relative"><input type="text" value="1"><div class="dec qtybutton">-</div><div class="inc qtybutton">+</div></div>
+                            <div class="cart-plus-minus p-relative">
+                                <input type="text" value="1" readonly id="input-quantity"><div class="dec qtybutton">-</div><div class="inc qtybutton">+</div>
+                            </div>
                         </div>
-                        <a href="cart.html" class="cart-btn">Add to Cart</a>
+                        <a href="javascript:;" class="cart-btn" onclick="cart.add('<?= e_id($prod->id) ?>')">Add to Cart</a>
                     </div>
                     <div class="details-meta">
                         <div class="d-meta-left">
                             <div class="dm-item mr-20">
-                                <a href="#"><i class="fal fa-heart"></i>Add to wishlist</a>
+                                <a href="javascript:;" onclick="wish.add('<?= e_id($prod->id) ?>')"><i class="fal fa-heart"></i>Add to wishlist</a>
                             </div>
                         </div>
                         <div class="d-meta-left">
                             <div class="dm-item">
-                                <a href="#"><i class="fal fa-share-alt"></i>Share</a>
+                                <a href="javascript:;" onclick="shareProd('<?= e_id($prod->id) ?>')"><i class="fal fa-share-alt"></i>Share</a>
                             </div>
                         </div>
                     </div>
@@ -80,7 +95,11 @@
                             </span>
                             <span class="posted_in">
                                 <span class="title">Category:</span>
-                                <a>iPhone</a>
+                                <a><?= $prod->cat_name ?></a>
+                            </span>
+                            <span class="posted_in">
+                                <span class="title">Sub Category:</span>
+                                <a><?= $prod->sub_cat ?></a>
                             </span>
                         </div>
                     </div>
@@ -111,3 +130,11 @@
         </div>
     </div>
 </div>
+<?= form_hidden('cart-'.e_id($prod->id), json_encode([
+    'prod' => e_id($prod->id),
+    'p_title' => $prod->p_title,
+    'image' => $prod->image,
+    'p_price' => $prod->p_price,
+    'slug' => "$prod->cat_slug/$prod->sc_slug/$prod->p_slug"
+    ])) ?>
+<?= form_hidden('prodPage', e_id($prod->id)) ?>

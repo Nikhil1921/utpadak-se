@@ -16,7 +16,20 @@ $route['addWish']['post'] = 'home/addWish';
 $route['apply-coupon']['post'] = 'user/apply_coupon';
 $route['add-address']['post'] = 'user/add_address';
 $route['check-address'] = 'user/check_address';
-if ($this->uri->segment(1) !== $admin) $route['(:any)/(:any)/(:any)'] = 'home/product/$1/$2/$3';
+$route['user'] = 'user/index';
+$route['user/profile'] = 'user/profile';
+$route['user/order/(:num)'] = 'user/order/$1';
+$route['login'] = 'login/index';
+$route['register'] = 'register/index';
+$route['forgotPassword'] = 'forgotPassword/index';
+$route['forgotPassword/check'] = 'forgotPassword/check';
+$route['forgotPassword/change-password'] = 'forgotPassword/change_password';
+
+if ($this->uri->segment(1) !== $admin)
+{
+    $route['(:any)(/:any)?'] = 'home/shop/$1$2';
+    $route['(:any)/(:any)/(:any)'] = 'home/product/$1/$2/$3';
+}
 
 // admin routes
 $route["$admin/forgot-password"] = "$admin/login/forgot_password";

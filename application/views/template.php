@@ -176,6 +176,8 @@
                                  '</span><span class="text"><span class="sub">Your Cart</span><span class="cart-total">₹ 0.00</span> </span>'
                                  ,'class="icon-link"'); ?>
                               <div class="cart" id="show-cart"></div>
+                              <div class="cart" id="show-cart"></div>
+                              <div class="cart" id="show-cart"></div>
                            </div>
                         </div>
                      </div>

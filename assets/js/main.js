@@ -278,7 +278,7 @@
 
 	////////////////////////////////////////////////////
 	// 21. Cart Plus Minus Js
-	/* $(".cart-plus-minus").append('<div class="dec qtybutton">-</div><div class="inc qtybutton">+</div>');
+	// $(".cart-plus-minus").append('<div class="dec qtybutton">-</div><div class="inc qtybutton">+</div>');
 	$(".qtybutton").on("click", function () {
 		var $button = $(this);
 		var oldValue = $button.parent().find("input").val();
@@ -293,7 +293,7 @@
 			}
 		}
 		$button.parent().find("input").val(newVal);
-	}); */
+	});
 
 	////////////////////////////////////////////////////
 	// 17. Show Login Toggle Js
@@ -834,23 +834,25 @@ const wish = {
 	save: () => {
 		let myWish=[];
 
-		JSON.parse(localStorage.getItem("wish")).forEach((ele) => {
-			myWish.push({ prod: ele.prod });
-		});
-
-		wishReq = $.ajax({
-					type: "POST",
-					url: `${base_url}addWish`,
-					data: {
-						wish: myWish,
-					},
-					dataType: "JSON",
-					beforeSend: function (xhr, opts) {
-						if (wishReq != 'ToCancelPrevReq' && wishReq.readyState < 4) {
-							wishReq.abort();
-						}
-					},
-				});
+		if (localStorage.getItem("wish") && localStorage.getItem("wish").length > 0) {
+			JSON.parse(localStorage.getItem("wish")).forEach((ele) => {
+				myWish.push({ prod: ele.prod });
+			});
+	
+			wishReq = $.ajax({
+						type: "POST",
+						url: `${base_url}addWish`,
+						data: {
+							wish: myWish,
+						},
+						dataType: "JSON",
+						beforeSend: function (xhr, opts) {
+							if (wishReq != 'ToCancelPrevReq' && wishReq.readyState < 4) {
+								wishReq.abort();
+							}
+						},
+					});
+    	}
 	}
 };
 
@@ -863,19 +865,26 @@ const cart = {
 			localStorage.setItem("cart", JSON.stringify([add]));
 		} else {
 			let check = true;
-			myCart.forEach((element) => {
-			if (element.prod == id) check = false;
+			myCart.forEach((element, index) => {
+				console.log(myCart[index].quantity);
+				if (element.prod == id) {
+					check = false;
+					myCart[index].quantity = add.quantity;
+				}
 			});
 			if (check === true) {
-			myCart.push(add);
-			localStorage.setItem("cart", JSON.stringify(myCart));
+				myCart.push(add);
 			}
+			localStorage.setItem("cart", JSON.stringify(myCart));
 		}
+
 		toastr["success"]("Product added to cart.");
 		cart.view();
 	},
 	delete: (id) => {
 		let myCart = JSON.parse(localStorage.getItem("cart")).filter(function(ele){
+			if ($("input[name=prodPage]").val() && parseInt($("input[name=prodPage]").val()) === id)
+        		$("#input-quantity").val(1);
 			if (ele.prod !== id) return ele;
 		});
 		localStorage.setItem("cart", JSON.stringify(myCart));
@@ -956,6 +965,9 @@ const cart = {
 											<span>(${counts} Item(s) in Cart)</span>
 											</div></li>`;
 			myCart.forEach((element) => {
+				if ($("input[name=prodPage]").val() && parseInt($("input[name=prodPage]").val()) === element.prod)
+        			$("#input-quantity").val(element.quantity);
+
 				total += element.quantity * element.p_price;
 				headerCart += `
 							<li>
@@ -969,7 +981,7 @@ const cart = {
 									<div class="cart__details">
 									<h6><a href="${base_url + element.slug}"> ${element.p_title}  </a></h6>
 									<div class="cart__price">
-										<span>₹ ${element.p_price}</span>
+										<span>₹ ${element.p_price} X ${element.quantity} = ${element.quantity * element.p_price}</span>
 									</div>
 									</div>
 								</div>
@@ -980,8 +992,20 @@ const cart = {
 							</li>
 						`;
 			});
+			headerCart += `<li>
+								<div class="cart__sub d-flex justify-content-between align-items-center">
+								<h6>Total</h6>
+								<span class="cart__sub-total">₹ ${total}</span>
+								</div>
+							</li>
+							<li>
+								<a href="${base_url}cart.html" class="wc-cart mb-10">View cart</a>
+								<a href="${base_url}checkout.html" class="wc-checkout">Checkout</a>
+							</li>`;
 		}
+
 		if (isLoggedIn) cart.save();
+
 		headerCart += "</ul></div>";
 		$(".cart-total").html(`₹ ${total}`);
 		$(".cart-counts").html(counts);
@@ -990,28 +1014,29 @@ const cart = {
 	},
 	save: () => {
 		let myCart=[];
+		if (localStorage.getItem("wish") && localStorage.getItem("wish").length > 0) {
+			JSON.parse(localStorage.getItem("cart")).forEach((ele) => {
+				myCart.push({ prod: ele.prod, qty: ele.quantity });
+			});
 
-		JSON.parse(localStorage.getItem("cart")).forEach((ele) => {
-			myCart.push({ prod: ele.prod, qty: ele.quantity });
-		});
+			cartReq = $.ajax({
+						type: "POST",
+						url: `${base_url}addCart`,
+						data: {
+							cart: myCart,
+						},
+						dataType: "JSON",
+						beforeSend: function (xhr, opts) {
+							if (cartReq != 'ToCancelPrevReq' && cartReq.readyState < 4) {
+								cartReq.abort();
+							}
+						},
+					});
 
-		cartReq = $.ajax({
-					type: "POST",
-					url: `${base_url}addCart`,
-					data: {
-						cart: myCart,
-					},
-					dataType: "JSON",
-					beforeSend: function (xhr, opts) {
-						if (cartReq != 'ToCancelPrevReq' && cartReq.readyState < 4) {
-							cartReq.abort();
-						}
-					},
-				});
-
-		if (window.location.pathname.includes("checkout") === true) {
-			checkOut();
-    	}
+			if (window.location.pathname.includes("checkout") === true) {
+				checkOut();
+			}
+		}
 	}
 };
 
@@ -1130,6 +1155,22 @@ if ($("#checkout-form").length > 0) {
 			return;
 		},
 	});
+}
+
+shareProd = async (id) => {
+	let prod = JSON.parse($(`input[name=cart-${id}]`).val());
+	const shareData = {
+	  title: document.getElementsByTagName('title')[0].innerHTML,
+	  text: prod.p_title,
+	  url: window.location.href
+	};
+	
+	try {
+		await navigator.share(shareData);
+		toastr["success"]("shared successfully");
+	} catch (err) {
+		toastr["error"](err);
+	}
 }
 
 // my custom code end

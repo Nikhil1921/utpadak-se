@@ -118,6 +118,15 @@
                         ]); ?>
                         <?= form_label('Top Featured', 'featured', 'class="mb-0"') ?>
                     </div>
+                    <div class="radio radio-primary">
+                        <?= form_radio([
+                            'value' => 'Deals Of The Day',
+                            'id' => "deals",
+                            'name' => "p_show",
+                            'checked' => set_value('p_show') ? set_radio('p_show', 'Deals Of The Day') : (isset($data['p_show']) && $data['p_show'] == 'Deals Of The Day' ? 'checked' : FALSE)
+                        ]); ?>
+                        <?= form_label('Deals Of The Day', 'deals', 'class="mb-0"') ?>
+                    </div>
                 </div>
             </div>
             <div class="col-<?= isset($data['image']) ? 4 : 6 ?>">

@@ -245,10 +245,10 @@ class Products extends Admin_controller  {
         [
             'field' => 'p_slug',
             'label' => 'Slug',
-            'rules' => 'required|max_length[5]|trim',
+            'rules' => 'required|max_length[100]|trim',
             'errors' => [
                 'required' => "%s is required",
-                'max_length' => "Max 5 chars allowed.",
+                'max_length' => "Max 100 chars allowed.",
             ],
         ],
         [
