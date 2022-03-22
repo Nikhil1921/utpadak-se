@@ -5,30 +5,30 @@
             <?php $this->load->view('user/sidebar') ?>
             <div class="col-xl-8 col-lg-7">
                 <div class="your-order mb-30 ">
-                    <h3>Update Profile</h3>
+                    <h3>Change Password</h3>
                     <div class="post-comment-form mt-20">
                         <?= form_open('', 'id="register-form"'); ?>
                             <div class="input-field">
-                                <i class="fal fa-user"></i>
+                                <i class="fal fa-lock"></i>
                                 <?= form_input([
-                                    'id'          => "fullname",
-                                    'placeholder' => "Fullname",
-                                    'name'        => "fullname",
-                                    'value'       => set_value('fullname') ? set_value('fullname') : $user['fullname'],
+                                    'type'        => "password",
+                                    'id'          => "password",
+                                    'placeholder' => "Password",
+                                    'name'        => "password",
                                     'maxlength'   => 100
                                 ]); ?>
-                                <?= form_error('fullname') ?>
+                                <?= form_error('password') ?>
                             </div>
                             <div class="input-field">
-                                <i class="fal fa-mobile"></i>
+                                <i class="fal fa-lock"></i>
                                 <?= form_input([
-                                    'id'          => "reg_mobile",
-                                    'placeholder' => "Mobile No.",
-                                    'name'        => "reg_mobile",
-                                    'value'       => set_value('reg_mobile') ? set_value('reg_mobile') : $user['mobile'],
-                                    'maxlength'   => 10
+                                    'type'        => "password",
+                                    'id'          => "c_password",
+                                    'placeholder' => "Confirm Password",
+                                    'name'        => "c_password",
+                                    'maxlength'   => 100
                                 ]); ?>
-                                <?= form_error('reg_mobile') ?>
+                                <?= form_error('c_password') ?>
                             </div>
                             <?= form_button([
                                 'type'    => 'submit',

@@ -140,6 +140,21 @@ class Main_modal extends MY_Model
         return $prod;
     }
 
+    public function getProdById($id)
+    {
+        $prod = $this->db->select('p.id, p.p_title, p.p_price, CONCAT("'.$this->products.'", p.image) image, c.cat_slug, sc.cat_slug sc_slug, p.p_slug, p.description, LEFT(p.description, 250) short_desc, p.multi_image, p.sku_code, c.cat_name, sc.cat_name sub_cat')
+                                        ->from('products p')
+                                        ->where(['p.id' => $id])
+                                        ->where(['c.is_deleted' => 0, 'sc.is_deleted' => 0, 'p.is_deleted' => 0])
+                                        ->join('category c', 'c.id = p.cat_id')
+                                        ->join('category sc', 'sc.id = p.sub_cat_id')
+                                        ->get()->row();
+                                        
+        if ($prod) $prod->base = $this->products;
+
+        return $prod;
+    }
+
     public function saveOrder($del, $post)
     {
         $address = $this->db->select('address, pincode')->from('addresses')

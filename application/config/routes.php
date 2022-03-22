@@ -7,6 +7,7 @@ $route['translate_uri_dashes'] = TRUE;
 
 // front routes
 $route['wishlist'] = 'home/wishlist';
+$route['getProduct'] = 'home/getProduct';
 $route['cart'] = 'home/cart';
 $route['checkout']['get'] = 'user/checkout';
 $route['checkout']['post'] = 'user/checkout_post';
@@ -18,7 +19,13 @@ $route['add-address']['post'] = 'user/add_address';
 $route['check-address'] = 'user/check_address';
 $route['user'] = 'user/index';
 $route['user/profile'] = 'user/profile';
-$route['user/order/(:num)'] = 'user/order/$1';
+$route['user/logout'] = 'user/logout';
+$route['user/order'] = 'user/order';
+$route['user/change-password'] = 'user/change_password';
+$route['user/address'] = 'user/address';
+$route['user/addAddress'] = 'user/addAddress';
+$route['user/updateAddress/(:num)'] = 'user/updateAddress/$1';
+$route['user/update-address/(:num)'] = 'user/update_address/$1';
 $route['login'] = 'login/index';
 $route['register'] = 'register/index';
 $route['forgotPassword'] = 'forgotPassword/index';

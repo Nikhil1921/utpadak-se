@@ -18,6 +18,9 @@
                         <li>
                             <?= anchor('user/change-password', '<div class="single-category p-relative mb-10">Change password</div>'); ?>
                         </li>
+                        <li>
+                            <?= anchor('user/logout', '<div class="single-category p-relative mb-10">Logout</div>'); ?>
+                        </li>
                     </ul>
                 </div>
             </div>

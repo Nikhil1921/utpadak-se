@@ -626,6 +626,22 @@
 const base_url = $("input[name=base_url]").val();
 const isLoggedIn = $("input[name=isLoggedIn]").val();
 
+const getProd = (id) => {
+	$.ajax({
+		type: "GET",
+		url: `${base_url}getProduct`,
+		data: {prod: id},
+		beforeSend: function (xhr, opts) {
+			$("#loading").fadeIn(500);
+		},
+	}).done((res) => {
+		$("#loading").fadeOut(500);
+		const myModal = new bootstrap.Modal(document.getElementById("productModalId"), {});
+		$("#prod-details").html(res);
+		myModal.show();
+	});
+}
+
 const swalShow = (icon, title, redirect=null) => {
   Swal.fire({
     title: title,
@@ -703,6 +719,21 @@ const checkAddress = (select) => {
 			delivery = parseInt(res.charge);
 			checkOut();
     	}
+		toastr[res.status](res.message);
+	});
+};
+
+const updateAddress = (form) => {
+	$.ajax({
+		type: "POST",
+		url: `${base_url}user/update-address/${$(form).data('id')}`,
+		data: $(form).serialize(),
+		dataType: "JSON",
+		beforeSend: function (xhr, opts) {
+			$("#loading").fadeIn(500);
+		},
+	}).done((res) => {
+		$("#loading").fadeOut(500);
 		toastr[res.status](res.message);
 	});
 };
@@ -866,7 +897,6 @@ const cart = {
 		} else {
 			let check = true;
 			myCart.forEach((element, index) => {
-				console.log(myCart[index].quantity);
 				if (element.prod == id) {
 					check = false;
 					myCart[index].quantity = add.quantity;

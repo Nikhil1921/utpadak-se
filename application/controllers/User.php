@@ -178,6 +178,52 @@ class User extends Public_controller {
         die(json_encode($response));
     }
 
+    public function update_address($id)
+    {
+        check_ajax();
+
+        $this->form_validation->set_rules('address', 'Address', 'required|max_length[255]', [
+                'required'      => '%s is required.',
+                'max_length'    => 'Max 255 chars allowed.']);
+
+        $this->form_validation->set_rules('pincode', 'Pincode', 'required|exact_length[6]|integer', [
+                'required'      => '%s is required.',
+                'integer'       => '%s is invalid.',
+                'exact_length'  => '%s is invalid.']);
+
+        if ($this->form_validation->run() == FALSE)
+            $response = [
+                'status'  => "error",
+                'message' => validation_errors()
+            ];
+        else{
+            if (! $this->main->check('pincodes', ['pincode' => $this->input->post('pincode')], 'del_charge'))
+                $response = [
+                    'status'  => "error",
+                    'message' => "Delivery not available for given pincode."
+                ];
+            else{
+                $post = [
+                    'address'  => $this->input->post('address'),
+                    'pincode'  => $this->input->post('pincode')
+                ];
+
+                if($this->main->update(['id' => d_id($id)], $post, 'addresses'))
+                    $response = [
+                        'status'  => "success",
+                        'message' => "Address updated successfully.",
+                    ];
+                else
+                    $response = [
+                        'status'  => "error",
+                        'message' => "Address not updated.",
+                    ];
+            }
+        }
+
+        die(json_encode($response));
+    }
+
     public function check_address()
     {
         check_ajax();
@@ -209,20 +255,39 @@ class User extends Public_controller {
 		return $this->template->load('template', 'user/order', $data);
     }
 
+    public function mobile_check($str)
+    {
+        $where = ['mobile' => $str, 'id != ' => $this->session->userId];
+        
+        if ($this->main->check('users', $where, 'id'))
+        {
+            $this->form_validation->set_message('mobile_check', 'The %s is already in use');
+            return FALSE;
+        } else
+            return TRUE;
+    }
+
     public function profile()
 	{
         $this->form_validation->set_rules('fullname', 'Fullname', 'required|max_length[100]|trim', [
                 'required'      => '%s is required.',
                 'max_length'    => 'Max 100 characters allowed.']);
 
-        $this->form_validation->set_rules('reg_mobile', 'Mobile No.', 'required|is_unique[users.mobile]|exact_length[10]|integer', [
+        $this->form_validation->set_rules('reg_mobile', 'Mobile No.', 'required|callback_mobile_check|exact_length[10]|integer', [
                 'required'      => '%s is required.',
                 'exact_length'  => '%s is invalid.',
                 'integer'       => '%s is invalid.',
                 'is_unique'     => 'This %s already in use.']);
-                
+
         if ($this->form_validation->run() == TRUE){
+            $post = [
+                'fullname'  => $this->input->post('fullname'),
+                'mobile'    => $this->input->post('reg_mobile')
+            ];
             
+            $id = $this->main->update(['id' => $this->session->userId], $post, 'users');
+
+            flashMsg($id, "Profile updated.", 'Profile not updated.', "user/profile");
         }else{
             $data['title'] = 'Profile';
             $data['name'] = 'profile';
@@ -230,6 +295,58 @@ class User extends Public_controller {
             
             return $this->template->load('template', 'user/profile', $data);
         }
+    }
+
+    public function change_password()
+	{
+        $this->form_validation->set_rules('password', 'Password', 'required|max_length[100]|trim', [
+                'required'      => '%s is required.',
+                'max_length'    => 'Max 100 characters allowed.']);
+        $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|max_length[100]|trim', [
+                'required'      => '%s is required.',
+                'max_length'    => 'Max 100 characters allowed.']);
+
+        if ($this->form_validation->run() == TRUE){
+            $post = [
+                'password'  => my_crypt($this->input->post('password'))
+            ];
+            
+            $id = $this->main->update(['id' => $this->session->userId], $post, 'users');
+
+            flashMsg($id, "Password changed.", 'Password not changed.', "user/change-password");
+        }else{
+            $data['title'] = 'Change password';
+            $data['name'] = 'profile';
+            
+            return $this->template->load('template', 'user/change_password', $data);
+        }
+    }
+
+    public function addAddress()
+	{
+        $data['title'] = 'Add Address';
+        $data['name'] = 'profile';
+        
+        return $this->template->load('template', 'user/add-address', $data);
+    }
+
+    public function address()
+	{
+        $data['title'] = 'Address List';
+        $data['name'] = 'profile';
+        $data['address'] = $this->main->getAll('addresses', 'id, address, pincode', ['u_id' => $this->session->userId]);
+        
+        return $this->template->load('template', 'user/address', $data);
+    }
+
+    public function updateAddress($id)
+	{
+        $data['title'] = 'address list';
+        $data['name'] = 'profile';
+        $data['id'] = $id;
+        $data['address'] = $this->main->get('addresses', 'address, pincode', ['id' => d_id($id), 'u_id' => $this->session->userId]);
+        
+        return $this->template->load('template', 'user/update-address', $data);
     }
 
     public function logout()

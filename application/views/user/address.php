@@ -5,34 +5,31 @@
             <?php $this->load->view('user/sidebar') ?>
             <div class="col-xl-8 col-lg-7">
                 <div class="news-detalis-content mb-50">
+                    <?= anchor('user/addAddress', 'Add new', 'class="cart-btn-2 w-50 mb-20"'); ?>
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Order #</th>
-                                <th>Products</th>
-                                <th>Total</th>
-                                <th>Action</th>
+                                <th>SR </th>
+                                <th>Address</th>
+                                <th>Pincode</th>
+                                <th>Change</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if($orders): ?>
-                            <?php foreach($orders as $k => $v): ?>
+                            <?php if($address): ?>
+                            <?php foreach($address as $k => $v): ?>
                                 <tr>
                                     <td><?= ++$k ?></td>
+                                    <td><?= $v['address'] ?></td>
+                                    <td><?= $v['pincode'] ?></td>
                                     <td>
-                                        <?php foreach(json_decode($v['details']) as $prod): ?>
-                                            <?= $prod->p_title ?><br>
-                                        <?php endforeach ?>
-                                    </td>
-                                    <td><?= $v['total_amount'] + $v['shipping'] - ($v['total_amount'] * $v['discount'] / 100) ?></td>
-                                    <td>
-                                        <?= anchor('user/order?order='.e_id($v['id']), '<i class="fa fa-eye"></i>'); ?>
+                                        <?= anchor('user/updateAddress/'.e_id($v['id']), '<i class="fa fa-pencil"></i>'); ?>
                                     </td>
                                 </tr>
                             <?php endforeach ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="4" class="text-center">No orders available.</td>
+                                    <td colspan="4" class="text-center">No address available.</td>
                                 </tr>
                             <?php endif ?>
                         </tbody>

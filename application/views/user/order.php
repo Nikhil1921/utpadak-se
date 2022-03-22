@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<div class="blog-area mt-120 mb-75">
+<div class="blog-area mt-50 mb-50">
     <div class="container">
         <div class="row">
             <?php $this->load->view('user/sidebar') ?>
