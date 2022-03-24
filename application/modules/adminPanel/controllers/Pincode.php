@@ -1,6 +1,14 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Pincode extends Admin_controller  {
+
+    public function __construct()
+	{
+		parent::__construct();
+        $this->states = $this->main->getAll('states', 'id, s_name', ['is_deleted' => 0]);
+	}
 
 	private $table = 'pincodes';
 	protected $redirect = 'pincode';
@@ -72,6 +80,7 @@ class Pincode extends Admin_controller  {
             return $this->template->load('template', "$this->redirect/form", $data);
         else{
             $post = [
+                's_id'           => d_id($this->input->post('s_id')),
                 'pincode'        => $this->input->post('pincode'),
                 'del_charge'     => $this->input->post('del_charge')
             ];
@@ -93,11 +102,12 @@ class Pincode extends Admin_controller  {
             $data['name'] = $this->name;
             $data['operation'] = "Update";
             $data['url'] = $this->redirect;
-            $data['data'] = $this->main->get($this->table, 'pincode, del_charge', ['id' => d_id($id)]);
+            $data['data'] = $this->main->get($this->table, 'pincode, del_charge, s_id', ['id' => d_id($id)]);
             
             return $this->template->load('template', "$this->redirect/form", $data);
         }else{
             $post = [
+                's_id'           => d_id($this->input->post('s_id')),
                 'pincode'        => $this->input->post('pincode'),
                 'del_charge'     => $this->input->post('del_charge')
             ];
@@ -105,6 +115,58 @@ class Pincode extends Admin_controller  {
             $id = $this->main->update(['id' => d_id($id)], $post, $this->table);
 
             flashMsg($id, "$this->title updated.", "$this->title not updated. Try again.", $this->redirect);
+        }
+	}
+
+	public function bulk()
+	{
+        $this->form_validation->set_rules([
+            [
+                'field' => 's_id',
+                'label' => 'State',
+                'rules' => 'required|integer|trim',
+                'errors' => [
+                    'required' => "%s is required",
+                    'integer' => "Only numbers are allowed.",
+                ],
+            ]
+        ]);
+
+        if ($this->form_validation->run() == FALSE)
+        {
+            $data['title'] = $this->title;
+            $data['name'] = $this->name;
+            $data['operation'] = "Upload";
+            $data['url'] = $this->redirect;
+            
+            return $this->template->load('template', "$this->redirect/bulk", $data);
+        }else{
+            if(empty($_FILES['file']['name'])) return flashMsg(0, "", "Select file to upload", "$this->redirect/bulk");
+            set_time_limit(0);
+            $path = $_FILES["file"]["tmp_name"];
+            $object = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+            foreach($object->getWorksheetIterator() as $worksheet)
+            {
+                $highestRow = $worksheet->getHighestRow();
+                $highestColumn = $worksheet->getHighestColumn();
+                for($row=2; $row <= $highestRow; $row++)
+                {
+                    $pin = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                    $del = $worksheet->getCellByColumnAndRow(2, $row)->getValue();
+
+                    if (!$this->main->check($this->table, ['pincode' => $pin, 'is_deleted' => 0], 'id')) {
+                        $post[] = [
+                            's_id'       => d_id($this->input->post('s_id')),
+                            'pincode'    => $pin,
+                            'del_charge' => $del
+                        ];
+                    }
+                }
+            }
+
+            $id = isset($post) ? $this->main->bulk_upload($post, $this->table) : 0;
+
+            flashMsg($id, "$this->title uploaded.", "$this->title not uploaded. Try again.", $this->redirect);
         }
 	}
 
@@ -152,6 +214,15 @@ class Pincode extends Admin_controller  {
             'errors' => [
                 'required' => "%s is required",
                 'max_length' => "Max 3 chars allowed.",
+                'integer' => "Only numbers are allowed.",
+            ],
+        ],
+        [
+            'field' => 's_id',
+            'label' => 'State',
+            'rules' => 'required|integer|trim',
+            'errors' => [
+                'required' => "%s is required",
                 'integer' => "Only numbers are allowed.",
             ],
         ]

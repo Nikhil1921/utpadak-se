@@ -166,6 +166,7 @@ class Main_modal extends MY_Model
                             ->join('products p', 'c.prod_id = p.id')
                             ->get()
                             ->result();
+                            
         $total = array_sum(array_map(function($c){ return $c->quantity * $c->p_price; }, $cart));
         
         $this->db->trans_start();

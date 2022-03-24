@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-<section class="banner__area pt-20 pb-10">
+<!-- <section class="banner__area pt-20 pb-10">
     <div class="container">
         <div class="row">
             <?php $sub_bans = [
@@ -57,7 +57,7 @@
             <?php endforeach ?>
         </div>
     </div>
-</section>
+</section> -->
 <?php if($prods && $prods['Deals Of The Day']):  ?>
 <section class="topsell__area-1 pt-15">
     <div class="container">
@@ -128,7 +128,7 @@
     </div>
 </section>
 <?php endif ?>
-<?php $sub_bans = [
+<!-- <?php $sub_bans = [
     [
         'banner' => 'banner-4.jpg',
         'span'  => 'Bestseller Products',
@@ -161,7 +161,7 @@
             <?php endforeach ?>
         </div>
     </div>
-</section>
+</section> -->
 <?php if($prods && $prods['Top Selling']):  ?>
 <section class="topsell__area-2 pt-15">
     <div class="container">

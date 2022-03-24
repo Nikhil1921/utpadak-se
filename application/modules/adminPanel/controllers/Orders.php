@@ -32,7 +32,10 @@ class Orders extends Admin_controller  {
             $sub_array[] = $sr;
             $sub_array[] = $row->name;
             $sub_array[] = $row->mobile;
-            $sub_array[] = $row->total_amount;
+            $sub_array[] = $row->total_amount - ($row->total_amount * $row->discount / 100) + $row->shipping;
+            $sub_array[] = $row->pay_staus;
+            $sub_array[] = $row->pay_type;
+            $sub_array[] = $row->payment_id;
             
             $action = '<div class="btn-group" role="group"><button class="btn btn-success dropdown-toggle" id="btnGroupVerticalDrop1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="icon-settings"></span></button><div class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1" x-placement="bottom-start">';
@@ -58,5 +61,16 @@ class Orders extends Admin_controller  {
         ];
         
         die(json_encode($output));
+    }
+
+    public function view($id)
+    {
+        $data['title'] = $this->title;
+        $data['name'] = $this->name;
+        $data['operation'] = "View";
+        $data['url'] = $this->redirect;
+        $data['data'] = $this->main->get($this->table, '*', ['id' => d_id($id)]);
+        
+        return $this->template->load('template', "$this->redirect/view", $data);
     }
 }

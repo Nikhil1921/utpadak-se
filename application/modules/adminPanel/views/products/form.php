@@ -88,6 +88,36 @@
                 </div>
             </div>
             <div class="col-6">
+                <div class="form-group">
+                    <?= form_label('SKU Code', 'sku_code', 'class="col-form-label"') ?>
+                    <?= form_input([
+                        'class' => "form-control",
+                        'type' => "text",
+                        'id' => "sku_code",
+                        'name' => "sku_code",
+                        'maxlength' => 50,
+                        'required' => "",
+                        'value' => set_value('sku_code') ? set_value('sku_code') : (isset($data['sku_code']) ? $data['sku_code'] : '')
+                    ]); ?>
+                    <?= form_error('sku_code') ?>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <?= form_label('HNS Code', 'hns_code', 'class="col-form-label"') ?>
+                    <?= form_input([
+                        'class' => "form-control",
+                        'type' => "text",
+                        'id' => "hns_code",
+                        'name' => "hns_code",
+                        'maxlength' => 50,
+                        'required' => "",
+                        'value' => set_value('hns_code') ? set_value('hns_code') : (isset($data['hns_code']) ? $data['hns_code'] : '')
+                    ]); ?>
+                    <?= form_error('hns_code') ?>
+                </div>
+            </div>
+            <div class="col-6">
                 <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
                     <?= form_label('Option To show', '', 'class="col-form-label"') ?>
                     <br>
@@ -126,6 +156,66 @@
                             'checked' => set_value('p_show') ? set_radio('p_show', 'Deals Of The Day') : (isset($data['p_show']) && $data['p_show'] == 'Deals Of The Day' ? 'checked' : FALSE)
                         ]); ?>
                         <?= form_label('Deals Of The Day', 'deals', 'class="mb-0"') ?>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group m-t-15 m-checkbox-inline mb-0 custom-radio-ml">
+                    <?= form_label('GST', '', 'class="col-form-label"') ?>
+                    <br>
+                    <div class="radio radio-primary">
+                        <?= form_radio([
+                            'value' => 0,
+                            'id' => "0",
+                            'name' => "gst",
+                            'checked' => set_value('gst') ? set_radio('gst', 0) : (isset($data['gst']) && $data['gst'] == 0 ? 'checked' : TRUE)
+                        ]); ?>
+                        <?= form_label('0 %', '0', 'class="mb-0"') ?>
+                    </div>
+                    <div class="radio radio-primary">
+                        <?= form_radio([
+                            'value' => 5,
+                            'id' => "5",
+                            'name' => "gst",
+                            'checked' => set_value('gst') ? set_radio('gst', 5) : (isset($data['gst']) && $data['gst'] == 5 ? 'checked' : FALSE)
+                        ]); ?>
+                        <?= form_label('5 %', '5', 'class="mb-0"') ?>
+                    </div>
+                    <div class="radio radio-primary">
+                        <?= form_radio([
+                            'value' => 8,
+                            'id' => "8",
+                            'name' => "gst",
+                            'checked' => set_value('gst') ? set_radio('gst', 8) : (isset($data['gst']) && $data['gst'] == 8 ? 'checked' : FALSE)
+                        ]); ?>
+                        <?= form_label('8 %', '8', 'class="mb-0"') ?>
+                    </div>
+                    <div class="radio radio-primary">
+                        <?= form_radio([
+                            'value' => 12,
+                            'id' => "12",
+                            'name' => "gst",
+                            'checked' => set_value('gst') ? set_radio('gst', 12) : (isset($data['gst']) && $data['gst'] == 12 ? 'checked' : FALSE)
+                        ]); ?>
+                        <?= form_label('12 %', '12', 'class="mb-0"') ?>
+                    </div>
+                    <div class="radio radio-primary">
+                        <?= form_radio([
+                            'value' => 18,
+                            'id' => "18",
+                            'name' => "gst",
+                            'checked' => set_value('gst') ? set_radio('gst', 18) : (isset($data['gst']) && $data['gst'] == 18 ? 'checked' : FALSE)
+                        ]); ?>
+                        <?= form_label('18 %', '18', 'class="mb-0"') ?>
+                    </div>
+                    <div class="radio radio-primary">
+                        <?= form_radio([
+                            'value' => 28,
+                            'id' => "28",
+                            'name' => "gst",
+                            'checked' => set_value('gst') ? set_radio('gst', 28) : (isset($data['gst']) && $data['gst'] == 28 ? 'checked' : FALSE)
+                        ]); ?>
+                        <?= form_label('28 %', '28', 'class="mb-0"') ?>
                     </div>
                 </div>
             </div>

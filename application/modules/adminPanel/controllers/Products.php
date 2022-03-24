@@ -95,6 +95,9 @@ class Products extends Admin_controller  {
                     'p_price'           => $this->input->post('p_price'),
                     'description'       => $this->input->post('description'),
                     'p_show'            => $this->input->post('p_show'),
+                    'sku_code'          => $this->input->post('sku_code'),
+                    'hns_code'          => $this->input->post('hns_code'),
+                    'gst'               => $this->input->post('gst'),
                     'seo_title'         => $this->input->post('seo_title'),
                     'seo_keyword'       => $this->input->post('seo_keyword'),
                     'seo_description'   => $this->input->post('seo_description'),
@@ -118,7 +121,7 @@ class Products extends Admin_controller  {
             $data['name'] = $this->name;
             $data['operation'] = "Update";
             $data['url'] = $this->redirect;
-            $data['data'] = $this->main->get($this->table, 'cat_id, sub_cat_id, p_title, p_slug, p_qty, p_price, description, p_show, seo_title, seo_keyword, seo_description, image', ['id' => d_id($id)]);
+            $data['data'] = $this->main->get($this->table, 'cat_id, sub_cat_id, p_title, p_slug, p_qty, p_price, description, p_show, seo_title, seo_keyword, seo_description, image, sku_code, hns_code, gst', ['id' => d_id($id)]);
             
             return $this->template->load('template', "$this->redirect/form", $data);
         }else{
@@ -128,6 +131,9 @@ class Products extends Admin_controller  {
                 'p_title'           => $this->input->post('p_title'),
                 'p_slug'            => strtolower($this->input->post('p_slug')),
                 'p_qty'             => $this->input->post('p_qty'),
+                'sku_code'          => $this->input->post('sku_code'),
+                'hns_code'          => $this->input->post('hns_code'),
+                'gst'               => $this->input->post('gst'),
                 'p_price'           => $this->input->post('p_price'),
                 'description'       => $this->input->post('description'),
                 'p_show'            => $this->input->post('p_show'),
@@ -214,6 +220,20 @@ class Products extends Admin_controller  {
         flashMsg($id, "$this->title updated.", "$this->title not updated. Try again.", "$this->redirect/multi-images/$id"); */
     }
 
+    public function slug_check($slug)
+    {
+        $check = $this->uri->segment(4) ? d_id($this->uri->segment(4)) : 0;
+
+        $where = ['p_slug' => $slug, 'id != ' => $check, 'is_deleted' => 0];
+
+        if ($this->main->check($this->table, $where, 'id'))
+        {
+            $this->form_validation->set_message('slug_check', 'The %s is already in use');
+            return FALSE;
+        } else
+            return TRUE;
+    }
+
     protected $validate = [
         [
             'field' => 'cat_id',
@@ -245,7 +265,7 @@ class Products extends Admin_controller  {
         [
             'field' => 'p_slug',
             'label' => 'Slug',
-            'rules' => 'required|max_length[100]|trim',
+            'rules' => 'required|max_length[100]|alpha_dash|trim|callback_slug_check',
             'errors' => [
                 'required' => "%s is required",
                 'max_length' => "Max 100 chars allowed.",
@@ -275,6 +295,22 @@ class Products extends Admin_controller  {
             'field' => 'description',
             'label' => 'Description',
             'rules' => 'required|trim',
+            'errors' => [
+                'required' => "%s is required",
+            ],
+        ],
+        [
+            'field' => 'sku_code',
+            'label' => 'SKU code',
+            'rules' => 'required|trim|max_length[50]',
+            'errors' => [
+                'required' => "%s is required",
+            ],
+        ],
+        [
+            'field' => 'hns_code',
+            'label' => 'HNS code',
+            'rules' => 'required|trim|max_length[50]',
             'errors' => [
                 'required' => "%s is required",
             ],

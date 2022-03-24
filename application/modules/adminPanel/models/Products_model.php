@@ -7,7 +7,7 @@ class Products_model extends MY_Model
 {
 	public $table = "products p";
 	public $select_column = ['p.id', 'p.p_title', 'p.p_price', 'p.p_qty', 'p.image'];
-	public $search_column = ['p.id', 'p.p_title', 'p.p_price', 'p.p_qty', 'p.image'];
+	public $search_column = ['p.id', 'p.p_title', 'p.p_price', 'p.p_qty', 'p.image', 'p.description'];
     public $order_column = [null, 'p.p_title', 'p.p_price', 'p.p_qty', 'p.image', null];
 	public $order = ['p.id' => 'DESC'];
 

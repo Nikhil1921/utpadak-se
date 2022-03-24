@@ -22,7 +22,7 @@
             </div>
             <div class="col-<?= (isset($data['banner'])) ? 4 : 6 ?>">
                 <div class="form-group">
-                    <?= form_label('Image', 'image', 'class="col-form-label"') ?>
+                    <?= form_label('Image <span class="text-danger">(Size should be 1900*500)</span>', 'image', 'class="col-form-label"') ?>
                     <?= form_input([
                         'class' => "form-control",
                         'type' => "file",
