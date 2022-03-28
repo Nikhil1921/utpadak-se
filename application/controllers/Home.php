@@ -171,4 +171,89 @@ class Home extends Public_controller {
 		
 		return $this->template->load('template', 'shop', $data);
 	}
+
+	public function become_partner()
+	{
+		$validate = [
+			[
+				'field' => 'reg_mobile',
+				'label' => 'Mobile No.',
+				'rules' => 'required|exact_length[10]|integer|is_unique[become_partner.mobile]|trim',
+				'errors' => [
+					'required' => "%s is required",
+					'exact_length' => "%s is invalid.",
+					'is_unique' => "%s is already in use.",
+					'integer' => "Only numbers are allowed.",
+				],
+			],
+			[
+				'field' => 'pincode',
+				'label' => 'Pincode',
+				'rules' => 'required|exact_length[6]|integer|trim',
+				'errors' => [
+					'required' => "%s is required",
+					'exact_length' => "%s is invalid.",
+					'integer' => "Only numbers are allowed.",
+				],
+			],
+			[
+				'field' => 'city',
+				'label' => 'City',
+				'rules' => 'required|max_length[50]|trim',
+				'errors' => [
+					'required' => "%s is required",
+					'max_length' => "Max 50 characters allowed.",
+				],
+			],
+			[
+				'field' => 'state',
+				'label' => 'State',
+				'rules' => 'required|max_length[50]|trim',
+				'errors' => [
+					'required' => "%s is required",
+					'max_length' => "Max 50 characters allowed.",
+				],
+			],
+			[
+				'field' => 'message',
+				'label' => 'Message',
+				'rules' => 'required|max_length[255]|trim',
+				'errors' => [
+					'required' => "%s is required",
+					'max_length' => "Max 255 characters allowed.",
+				],
+			],
+			[
+				'field' => 'fullname',
+				'label' => 'Contact Person Name',
+				'rules' => 'required|max_length[100]|trim',
+				'errors' => [
+					'required' => "%s is required",
+					'max_length' => "Max 100 characters allowed.",
+				],
+			],
+		];
+
+        $this->form_validation->set_rules($validate);
+        
+        $data['title'] = 'Become partner';
+        $data['name'] = 'login';
+
+        if ($this->form_validation->run() == FALSE)
+            return $this->template->load('template', "become_partner", $data);
+        else{
+            $post = [
+                'mobile'     => $this->input->post('reg_mobile'),
+                'name'       => $this->input->post('fullname'),
+                'city'       => $this->input->post('city'),
+                'state'      => $this->input->post('state'),
+                'pincode'    => $this->input->post('pincode'),
+                'message'    => $this->input->post('message'),
+            ];
+            
+            $user = $this->main->add($post, 'become_partner');
+            
+			flashMsg($user, "Request saved success.", "Request not saved.", 'become-partner');
+        }
+	}
 }

@@ -33,6 +33,7 @@ $route['register/register'] = 'register/register';
 $route['forgotPassword'] = 'forgotPassword/index';
 $route['forgotPassword/check'] = 'forgotPassword/check';
 $route['forgotPassword/change-password'] = 'forgotPassword/change_password';
+$route['become-partner'] = 'home/become_partner';
 
 if ($this->uri->segment(1) !== $admin)
 {

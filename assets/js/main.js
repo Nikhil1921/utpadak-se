@@ -1115,6 +1115,26 @@ if ($("#register-form").length > 0) {
         minlength: 3,
         maxlength: 100,
       },
+      state: {
+        required: true,
+        minlength: 3,
+        maxlength: 50,
+      },
+      city: {
+        required: true,
+        minlength: 3,
+        maxlength: 50,
+      },
+      message: {
+        required: true,
+        maxlength: 255,
+      },
+      pincode: {
+        required: true,
+        minlength: 6,
+        maxlength: 6,
+        digits: true,
+      },
       password: {
         required: true,
         minlength: 3,
