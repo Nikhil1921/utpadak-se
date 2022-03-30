@@ -34,6 +34,7 @@ $route['forgotPassword'] = 'forgotPassword/index';
 $route['forgotPassword/check'] = 'forgotPassword/check';
 $route['forgotPassword/change-password'] = 'forgotPassword/change_password';
 $route['become-partner'] = 'home/become_partner';
+$route['about-us'] = 'home/about_us';
 
 if ($this->uri->segment(1) !== $admin)
 {

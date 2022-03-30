@@ -39,6 +39,15 @@ class Home extends Public_controller {
 
 		return $this->template->load('template', 'wishlist', $data);
 	}
+
+	public function about_us()
+	{
+		$data['title'] = 'About Us';
+        $data['name'] = 'about';
+        $data['breadcrumb'] = $this->breadcrumb.'wishlist.jpg';
+
+		return $this->template->load('template', 'about_us', $data);
+	}
 	
 	public function cart()
 	{
@@ -237,7 +246,7 @@ class Home extends Public_controller {
         $this->form_validation->set_rules($validate);
         
         $data['title'] = 'Become partner';
-        $data['name'] = 'login';
+        $data['name'] = 'become_partner';
 
         if ($this->form_validation->run() == FALSE)
             return $this->template->load('template', "become_partner", $data);

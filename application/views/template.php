@@ -19,7 +19,7 @@
       <?= link_tag('assets/flaticon/flaticon.css', 'stylesheet', 'text/css') ?>
       <?= link_tag('assets/css/font-awesome-pro.css', 'stylesheet', 'text/css') ?>
       <?= link_tag('assets/css/default.css', 'stylesheet', 'text/css') ?>
-      <?= link_tag('assets/css/style.css?v=1.0.1', 'stylesheet', 'text/css') ?>
+      <?= link_tag('assets/css/style.css?v='.time(), 'stylesheet', 'text/css') ?>
       <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
    </head>
    <body>
@@ -239,6 +239,9 @@
                                  <li><?= anchor('', "Home", 'class="'.($name === 'home' ? 'active' : '').'"'); ?></li>
                                  <li><?= anchor('about-us', "About Us", 'class="'.($name === 'about' ? 'active' : '').'"'); ?></li>
                                  <li><?= anchor('become-partner', "Become partner", 'class="'.($name === 'become_partner' ? 'active' : '').'"'); ?></li>
+                                 <?php if(! $this->session->userId): ?>
+                                    <li><?= anchor('login', 'Login', 'class="'.($name === 'login' ? 'active' : '').'"') ?></li>
+                                 <?php endif ?>
                               </ul>
                            </nav>
                         </div>
@@ -336,10 +339,10 @@
                                  <div class="footer__widget-content">
                                     <div class="footer__link">
                                        <ul>
-                                          <li><?= anchor('faq', 'Help Center') ?></li>
-                                          <li><?= anchor('faq', 'Contact Us') ?></li>
-                                          <li><?= anchor('faq', 'Submit a Dispute') ?></li>
-                                          <li><?= anchor('faq', 'Policies &amp; Rules') ?></li>
+                                          <li><?= anchor('contact-us', 'Contact Us') ?></li>
+                                          <li><?= anchor('terms-conditions', 'Terms & Conditions') ?></li>
+                                          <li><?= anchor('privacy-policy', 'Privacy policy') ?></li>
+                                          <li><?= anchor('refund-policy', 'Refund policy') ?></li>
                                        </ul>
                                     </div>
                                  </div>
@@ -360,12 +363,15 @@
                                           <div class="footer__widget-content">
                                              <div class="footer__link">
                                                 <ul>
-                                                   <li><?= anchor('faq', 'Product Support') ?></li>
-                                                   <!-- <li><a href="checkout.html">Checkout</a></li>
-                                                      <li><a href="cart.html">Shopping Cart</a></li>
-                                                      <li><a href="wishlist.html">Wishlist</a></li> -->
-                                                   <li><?= anchor('faq', 'Terms &amp; Conditions &amp;') ?></li>
-                                                   <li><?= anchor('faq', 'Redeem Voucher') ?></li>
+                                                   <?php if($this->session->userId): ?>
+                                                      <li><?= anchor('user', 'Orders') ?></li>
+                                                      <li><?= anchor('user/profile', 'Profile') ?></li>
+                                                      <li><?= anchor('user/address', 'My address') ?></li>
+                                                      <li><?= anchor('user/change-password', 'Change password') ?></li>
+                                                      <li><?= anchor('user/logout', 'Logout') ?></li>
+                                                      <?php else: ?>
+                                                      <li><?= anchor('login', 'Login') ?></li>
+                                                   <?php endif ?>
                                                 </ul>
                                              </div>
                                           </div>
@@ -379,10 +385,8 @@
                                           <div class="footer__widget-content">
                                              <div class="footer__link">
                                                 <ul>
-                                                   <!-- <li><a href="contact.html">Store Location</a></li>
-                                                      <li><a href="my-account.html">My account</a></li>
-                                                      <li><a href="contact.html">Order Tracking</a></li> -->
-                                                   <li><?= anchor('faq', 'FAQs') ?></li>
+                                                   <li><?= anchor('cart', 'Cart') ?></li>
+                                                   <li><?= anchor('wishlist', 'Wishlist') ?></li>
                                                 </ul>
                                              </div>
                                           </div>
@@ -476,7 +480,7 @@
       <?php endif ?>
       <?= form_hidden('isLoggedIn', $this->session->userId ? true : false) ?>
       <?= form_hidden('discount', $this->session->coupon_discount ? $this->session->coupon_discount : 0) ?>
-      <?php if(in_array($name, ['login', 'register', 'forgot_password', 'checkout', 'profile'])): ?>
+      <?php if(in_array($name, ['login', 'register', 'forgot_password', 'checkout', 'profile', 'become_partner'])): ?>
          <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
          <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
       <?php endif ?>
