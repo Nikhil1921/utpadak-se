@@ -36,6 +36,10 @@ $route['forgotPassword/change-password'] = 'forgotPassword/change_password';
 $route['become-partner'] = 'home/become_partner';
 $route['about-us'] = 'home/about_us';
 $route['user/cancel']['post'] = 'user/cancel';
+$route['terms-conditions'] = 'home/terms';
+$route['payment-protection'] = 'home/payment';
+$route['refund-policy'] = 'home/refund';
+$route['delivery-information'] = 'home/delivery';
 
 if ($this->uri->segment(1) !== $admin)
 {

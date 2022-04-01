@@ -341,8 +341,9 @@
                                        <ul>
                                           <li><?= anchor('contact-us', 'Contact Us') ?></li>
                                           <li><?= anchor('terms-conditions', 'Terms & Conditions') ?></li>
-                                          <li><?= anchor('privacy-policy', 'Privacy policy') ?></li>
+                                          <li><?= anchor('payment-protection', 'Payment protection') ?></li>
                                           <li><?= anchor('refund-policy', 'Refund policy') ?></li>
+                                          <li><?= anchor('delivery-information', 'Delivery Information') ?></li>
                                        </ul>
                                     </div>
                                  </div>

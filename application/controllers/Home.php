@@ -265,4 +265,40 @@ class Home extends Public_controller {
 			flashMsg($user, "Request saved success.", "Request not saved.", 'become-partner');
         }
 	}
+
+	public function terms()
+	{
+		$data['title'] = 'Terms & Conditions';
+        $data['name'] = 'terms';
+        $data['breadcrumb'] = $this->breadcrumb.'cart.jpg';
+
+		return $this->template->load('template', 'terms', $data);
+	}
+
+	public function payment()
+	{
+		$data['title'] = 'Payment Protection';
+        $data['name'] = 'payment';
+        $data['breadcrumb'] = $this->breadcrumb.'cart.jpg';
+
+		return $this->template->load('template', 'payment', $data);
+	}
+
+	public function refund()
+	{
+		$data['title'] = 'Refund policy';
+        $data['name'] = 'refund';
+        $data['breadcrumb'] = $this->breadcrumb.'cart.jpg';
+
+		return $this->template->load('template', 'refund', $data);
+	}
+
+	public function delivery()
+	{
+		$data['title'] = 'Delivery Information';
+        $data['name'] = 'delivery';
+        $data['breadcrumb'] = $this->breadcrumb.'cart.jpg';
+
+		return $this->template->load('template', 'delivery', $data);
+	}
 }
