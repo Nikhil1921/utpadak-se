@@ -251,7 +251,9 @@ class User extends Public_controller {
         $data['title'] = 'Order';
         $data['name'] = 'order';
 		$data['order'] = $this->main->get('orders', '*', ['id' => d_id($this->input->get('order')), 'is_deleted' => 0]);
-        
+        /* $message = $this->load->view('user/order', $data, true);
+        $subject = 'Your new order';
+        send_email('densetek.jignesh@gmail.com', $message, $subject); */
 		return $this->template->load('template', 'user/order', $data);
     }
 
@@ -353,5 +355,17 @@ class User extends Public_controller {
 	{
 		$this->session->sess_destroy();
         return redirect('login');
+    }
+
+    public function cancel()
+	{
+        $this->form_validation->set_rules('id', 'id', 'required|numeric');
+
+        if ($this->form_validation->run() == FALSE)
+            flashMsg(0, "", "Some required fields are missing.", $this->redirect);
+        else{
+            $id = $this->main->update(['id' => d_id($this->input->post('id'))], ['status' => 'Canceled'], 'orders');
+            flashMsg($id, "Order canceled.", "Order not canceled.", 'user');
+        }
     }
 }

@@ -32,14 +32,20 @@
                             <thead>
                                 <tr>
                                     <th class="product-name">Product</th>
+                                    <th class="product-name">GST</th>
                                     <th class="product-total">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach(json_decode($order['details']) as $prod): ?>
+                                <?php $t_gst = 0; foreach(json_decode($order['details']) as $prod): ?>
                                     <tr class="cart_item">
                                         <td class="product-name">
                                             <?= $prod->p_title ?> <strong class="product-quantity"> × <?= $prod->quantity ?></strong>
+                                        </td>
+                                        <td class="product-name">
+                                            <?php  $slab = explode(', ', $order['o_gst']); foreach($slab as $gst): $pri = round($prod->quantity * $prod->p_price * $prod->gst / (100 + $prod->gst)) ?>
+                                            <strong class="product-quantity"><?= $gst ?> - </strong>₹ <?= $pri / count($slab) ?><br />
+                                            <?php endforeach; $t_gst += $pri ?>
                                         </td>
                                         <td class="product-total">
                                             <span class="amount">₹ <?= $prod->p_price * $prod->quantity ?></span>
@@ -48,7 +54,7 @@
                                 <?php endforeach ?>
                             </tbody>
                             <tfoot>
-                                <?php if($order['discount']): ?>
+                                <?php $dis = 0; if($order['discount']): ?>
                                 <tr class="cart-subtotal">
                                     <th>Discount</th>
                                     <td>
@@ -58,10 +64,12 @@
                                 <?php endif ?>
                                 <tr class="shipping">
                                     <th>Shipping</th>
+                                    <td>₹ 0</td>
                                     <td>₹ <?= $order['shipping'] ?></td>
                                 </tr>
                                 <tr class="order-total">
                                     <th>Order Total</th>
+                                    <th>₹ <?= $t_gst ?></th>
                                     <td><strong><span class="amount">₹ <?= $order['total_amount'] - $dis + $order['shipping'] ?></span></strong>
                                     </td>
                                 </tr>

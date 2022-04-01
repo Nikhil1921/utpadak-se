@@ -157,11 +157,14 @@ class Main_modal extends MY_Model
 
     public function saveOrder($del, $post)
     {
-        $address = $this->db->select('address, pincode')->from('addresses')
-                            ->where('id', d_id($this->input->post('add_id')))->get()
+        $address = $this->db->select('a.address, a.pincode, s.s_gst')->from('addresses a')
+                            ->where('a.id', d_id($this->input->post('add_id')))
+                            ->join('pincodes p', 'p.pincode = a.pincode')
+                            ->join('states s', 's.id = p.s_id')
+                            ->get()
                             ->row();
 
-        $cart = $this->db->select('c.prod_id, c.quantity, p.p_price, p.p_title')->from('cart c')
+        $cart = $this->db->select('c.prod_id, c.quantity, p.p_price, p.p_title, p.gst')->from('cart c')
                             ->where('u_id', $this->session->userId)
                             ->join('products p', 'c.prod_id = p.id')
                             ->get()
@@ -180,10 +183,11 @@ class Main_modal extends MY_Model
             'mobile'       => $this->input->post('mobile'),
             'address'      => $address->address,
             'pincode'      => $address->pincode,
+            'gst_slab'     => $address->s_gst,
             'pay_type'     => $this->input->post('pay_type'),
             'o_date'       => date('Y-m-d'),
             'o_time'       => date('H:i:s'),
-            'status'       => 'Pending',
+            'status'       => 'New Order',
             'payment_id'   => $this->input->post('pay_type'),
             'coupon'       => $this->session->coupon_code ? $this->session->coupon_code : "NA",
             'discount'     => $this->session->coupon_discount ? $this->session->coupon_discount : 0,

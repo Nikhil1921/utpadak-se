@@ -473,7 +473,7 @@
       <?= script('assets/js/wow.js') ?>
       <?= script('assets/js/isotope-pkgd.js') ?>
       <?= script('assets/js/imagesloaded-pkgd.js') ?>
-      <?php if($this->session->error || $this->session->success): ?>
+      <?php if($this->session->error || $this->session->success || $name == 'my-account'): ?>
       <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <?= form_hidden('error', $this->session->error) ?>
       <?= form_hidden('success', $this->session->success) ?>

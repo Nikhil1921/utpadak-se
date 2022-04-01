@@ -11,6 +11,7 @@
                                 <th>Order #</th>
                                 <th>Products</th>
                                 <th>Total</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -25,8 +26,15 @@
                                         <?php endforeach ?>
                                     </td>
                                     <td><?= $v['total_amount'] + $v['shipping'] - ($v['total_amount'] * $v['discount'] / 100) ?></td>
+                                    <td><?= $v['status'] ?></td>
                                     <td>
-                                        <?= anchor('user/order?order='.e_id($v['id']), '<i class="fa fa-eye"></i>'); ?>
+                                        <?= anchor('user/order?order='.e_id($v['id']), '<i class="fa fa-eye"></i> View'); ?>
+                                        <?php if($v['status'] === 'New Order'): ?>
+                                        &nbsp;&nbsp;
+                                        <?= form_open('user/cancel', 'id="'.e_id($v['id']).'"', ['id' => e_id($v['id'])]) ?>
+                                        <a onclick="cancelOrder('<?= e_id($v['id']) ?>'); return false;" href=""><i class="fa fa-times"></i> Cancel</a>
+                                        <?= form_close(); ?>
+                                        <?php endif ?>
                                     </td>
                                 </tr>
                             <?php endforeach ?>

@@ -83,3 +83,23 @@ if ( ! function_exists('script'))
         return "\n<script src=\"".base_url($url)."\" type=\"$type\"></script>\n";
     }
 }
+
+if ( ! function_exists('send_email'))
+{
+    function send_email($email, $message, $subject, $pdf=null)
+	{
+        $CI =& get_instance();
+		$CI->load->library('email');
+		$CI->email->clear(TRUE);
+		$CI->email->set_newline("\r\n");
+		$CI->email->from('support@utpadakse.com', APP_NAME);
+		$CI->email->to($email);
+		$CI->email->subject($subject);
+		$CI->email->message($message);
+		/* if ($pdf)
+            $CI->email->attach($_SERVER['DOCUMENT_ROOT'] . str_replace(basename($_SERVER["SCRIPT_NAME"]), "", $_SERVER["SCRIPT_NAME"])."Exam-procedure.pdf"); */
+        
+		$CI->email->send(FALSE);
+        $CI->email->print_debugger(array('headers'));
+	}
+}

@@ -70,6 +70,9 @@
                                 <?= anchor(admin('dashboard'), '<i data-feather="home"></i><span> Dashboard</span>', 'class="sidebar-header '.($name == 'dashboard' ? 'active' : '').'"') ?>
                             </li>
                             <li>
+                                <?= anchor(admin('orders'), '<i data-feather="file-text"></i><span> Orders</span>', 'class="sidebar-header '.($name == 'orders' ? 'active' : '').'"') ?>
+                            </li>
+                            <li>
                                 <?= anchor(admin('banners'), '<i data-feather="image"></i><span> Banners</span>', 'class="sidebar-header '.($name == 'banners' ? 'active' : '').'"') ?>
                             </li>
                             <li>
@@ -86,9 +89,6 @@
                             </li>
                             <li>
                                 <?= anchor(admin('users'), '<i data-feather="users"></i><span> Users</span>', 'class="sidebar-header '.($name == 'users' ? 'active' : '').'"') ?>
-                            </li>
-                            <li>
-                                <?= anchor(admin('orders'), '<i data-feather="file"></i><span> Orders</span>', 'class="sidebar-header '.($name == 'orders' ? 'active' : '').'"') ?>
                             </li>
                             <li>
                                 <?= anchor(admin('state'), '<i data-feather="file"></i><span> State</span>', 'class="sidebar-header '.($name == 'state' ? 'active' : '').'"') ?>
@@ -146,7 +146,7 @@
         <?php if(isset($datatable)): ?>
         <input type="hidden" name="dataTableUrl" value="<?= base_url($datatable) ?>" />
         <script src="<?= base_url('assets/back/js/datatable/datatables/jquery.dataTables.min.js') ?>"></script>
-        <script src="<?= base_url('assets/back/js/datatable/datatables/datatable.custom.js') ?>"></script>
+        <script src="<?= base_url('assets/back/js/datatable/datatables/datatable.custom.js?v=1.0.1') ?>"></script>
         <script src="<?= base_url('assets/back/js/sweet-alert/sweetalert.min.js') ?>"></script>
         <?php endif ?>
         <script src="<?= base_url('assets/back/js/datepicker/date-picker/datepicker.js') ?>"></script>
@@ -155,6 +155,6 @@
         <script src="<?= base_url('assets/back/js/config.js') ?>"></script>
         <script src="<?= base_url('assets/back/js/select2/select2.full.min.js') ?>"></script>
         <script src="<?= base_url('assets/back/js/select2/select2-custom.js') ?>"></script>
-        <script src="<?= base_url('assets/back/js/script.js') ?>"></script>
+        <script src="<?= base_url('assets/back/js/script.js?v=1.0.1') ?>"></script>
     </body>
 </html>

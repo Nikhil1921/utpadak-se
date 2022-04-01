@@ -650,7 +650,7 @@ const swalShow = (icon, title, redirect=null) => {
     timerProgressBar: true,
     showConfirmButton: false,
   }).then((result) => {
-    if (result.dismiss === Swal.DismissReason.timer && redirect) {
+    if (redirect) {
       window.location.href = `${base_url + redirect}.html`;
     }
   });
@@ -1206,6 +1206,22 @@ if ($("#checkout-form").length > 0) {
 		},
 	});
 }
+
+cancelOrder = (id) => {
+	Swal.fire({
+		title: "Are you sure?",
+		text: "You won't be able to revert this!",
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#3085d6",
+		cancelButtonColor: "#d33",
+		confirmButtonText: "Yes, cancel it!",
+	}).then((result) => {
+		if (result.isConfirmed) {
+			$(`#${id}`).submit();
+		}
+	});
+};
 
 shareProd = async (id) => {
 	let prod = JSON.parse($(`input[name=cart-${id}]`).val());
