@@ -486,6 +486,6 @@
          <script src="//cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
       <?php endif ?>
       <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-      <?= script('assets/js/main.js?v='.time()) ?>
+      <?= script('assets/js/main.js?v=1.0.1') ?>
    </body>
 </html>

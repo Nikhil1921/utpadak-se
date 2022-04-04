@@ -4,16 +4,16 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 switch ($_SERVER['SERVER_NAME']) {
-    case 'www.utpadak_se.com':
-    case 'utpadak_se.com':
-    case 'https://www.utpadak_se.com':
-    case 'https://utpadak_se.com':
+    case 'www.utpadakse.com':
+    case 'utpadakse.com':
+    case 'https://www.utpadakse.com':
+    case 'https://utpadakse.com':
         $db['default'] = array(
             'dsn'   => '',
             'hostname' => 'localhost',
-            'username' => 'carefajd_cft',
-            'password' => '(+TF?d.wOluY',
-            'database' => 'carefajd_cft',
+            'username' => 'densehwm_demo',
+            'password' => 'Densetek@2018',
+            'database' => 'densehwm_utpadak_se',
             'dbdriver' => 'mysqli',
             'dbprefix' => '',
             'pconnect' => (ENVIRONMENT !== 'production'),

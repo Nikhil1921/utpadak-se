@@ -43,7 +43,7 @@
                         <div class="tab-content" id="productThumbContent">
                             <?php if ($prod->multi_image): ?>
                             <?php foreach (explode(', ', $prod->multi_image) as $k => $img): ?>
-                            <div class="tab-pane fade show <?= $k === 0 ? 'active' : '' ?>" id="thumb<?= $k ?>" role="tabpanel" aria-labelledby="thumb<?= $k ?>-tab">
+                            <div class="tab-pane fade <?= $k === 0 ? 'active show' : '' ?>" id="thumb<?= $k ?>" role="tabpanel" aria-labelledby="thumb<?= $k ?>-tab">
                                 <div class="product__details-nav-thumb w-img">
                                     <?= img($prod->base.$img); ?>
                                 </div>

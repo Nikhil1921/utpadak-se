@@ -90,7 +90,7 @@
                                     <?= anchor($deal->slug, img($deal->image)); ?>
                                 </div>
                                 <div class="product-action">
-                                    <a href="javascript:;" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId">
+                                    <a href="javascript:;" class="icon-box icon-box-1" onclick="getProd(<?= e_id($deal->id) ?>);">
                                         <i class="fal fa-eye"></i>
                                         <i class="fal fa-eye"></i>
                                     </a>
@@ -266,7 +266,7 @@
                                     <?= anchor($deal->slug, img($deal->image)); ?>
                                 </div>
                                 <div class="product-action">
-                                    <a href="javascript:;" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId">
+                                    <a href="javascript:;" class="icon-box icon-box-1" onclick="getProd(<?= e_id($deal->id) ?>);">
                                         <i class="fal fa-eye"></i>
                                         <i class="fal fa-eye"></i>
                                     </a>

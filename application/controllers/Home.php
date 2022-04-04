@@ -74,7 +74,7 @@ class Home extends Public_controller {
 	public function getProduct()
 	{
 		$data['prod'] = $this->main->getProdById(d_id($this->input->get('prod')));
-
+		
 		die($this->load->view('getProduct', $data, true));
 	}
 

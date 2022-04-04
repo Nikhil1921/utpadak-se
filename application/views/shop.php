@@ -101,7 +101,7 @@
                                                 <?= anchor($p->slug, img($p->image)) ?>
                                             </div>
                                             <div class="product-action">
-                                                <a href="javascript:;" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId">
+                                                <a href="javascript:;" class="icon-box icon-box-1" onclick="getProd(<?= e_id($p->id) ?>);">
                                                     <i class="fal fa-eye"></i>
                                                     <i class="fal fa-eye"></i>
                                                 </a>
@@ -142,7 +142,7 @@
                                                             <?= anchor($p->slug, img($p->image)) ?>
                                                         </div>
                                                         <div class="product-action">
-                                                            <a href="javascript:;" class="icon-box icon-box-1" data-bs-toggle="modal" data-bs-target="#productModalId">
+                                                            <a href="javascript:;" class="icon-box icon-box-1" onclick="getProd(<?= e_id($p->id) ?>);">
                                                                 <i class="fal fa-eye"></i>
                                                                 <i class="fal fa-eye"></i>
                                                             </a>
