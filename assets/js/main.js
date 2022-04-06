@@ -968,7 +968,7 @@ const cart = {
 						<td class="product-price"><span class="amount">₹ ${ele.p_price}</span></td>
 						<td class="product-quantity">
 							<div class="cart-plus-minus"><input type="text" value="${ele.quantity}" readonly="" />
-							<div class="dec qtybutton" onclick="${ele.quantity > 1 ? `cart.update(${ele.prod}, ${ele.quantity - 1})` : ''}">-</div><div class="inc qtybutton" onclick="cart.update(${ele.prod}, ${ele.quantity+1})">+</div></div>
+							<div class="dec qtybutton" onclick="${ele.quantity > 1 ? `cart.update(${ele.prod}, ${ele.quantity - 1})` : ''}">-</div><div class="inc qtybutton" onclick="cart.update(${ele.prod}, ${parseInt(ele.quantity)+1})">+</div></div>
 						</td>
 						<td class="product-subtotal"><span class="amount">₹ ${ele.p_price * ele.quantity}</span></td>
 						<td class="product-remove"><a href="javascript:;" onclick="cart.delete(${ele.prod})"><i class="fa fa-times"></i></a></td>

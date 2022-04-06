@@ -13,9 +13,9 @@ class Public_controller extends MY_Controller
 			return [
 				'cat_slug' => $cat['cat_slug'],
 				'cat_name' => $cat['cat_name'],
-				'sub_cats' => $this->main->getAll('category', 'cat_slug, cat_name', ['is_deleted' => 0, 'parent_id' => $cat['id']])
+				'sub_cats' => $this->main->getAll('category', 'cat_slug, cat_name', ['is_deleted' => 0, 'parent_id' => $cat['id']], 'cat_name ASC')
 			];
-		}, $this->main->getAll('category', 'id, cat_slug, cat_name', ['is_deleted' => 0, 'parent_id' => 0]));
+		}, $this->main->getAll('category', 'id, cat_slug, cat_name', ['is_deleted' => 0, 'parent_id' => 0], 'cat_name ASC'));
 		
 		$this->cart = $this->main->getCart($this->session->userId);
 		$this->wishlist = $this->main->getWishlist($this->session->userId);
